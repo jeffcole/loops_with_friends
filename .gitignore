@@ -9,6 +9,7 @@ erl_crash.dump
 
 # Static artifacts
 /node_modules
+elm-stuff
 npm-debug.log
 
 # Since we are building assets from web/static,
