@@ -4,8 +4,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-root : Html a
-root =
+root : a -> Html b
+root model =
     div [ class "container" ]
         [ section [ class "welcome" ]
             [ h1 [] [ text "Loops" ]
