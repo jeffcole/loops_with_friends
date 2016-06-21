@@ -10,13 +10,19 @@ import Types exposing (..)
 initialState : (String, Cmd Msg)
 initialState =
   (""
-  , initSound
+  , Cmd.none
   )
 
 
 update : Msg -> a -> (a, Cmd Msg)
 update msg model =
-  (model, Cmd.none)
+  case msg of
+    Play ->
+      (model, initSound)
+    PlaySucceed () ->
+      (model, Cmd.none)
+    PlayFail error ->
+      (model, Cmd.none)
 
 
 subscriptions : a -> Sub b

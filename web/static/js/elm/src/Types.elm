@@ -1,6 +1,6 @@
 module Types exposing (..)
 
-
 type Msg
-  = PlaySucceed ()
+  = Play
+  | PlaySucceed ()
   | PlayFail String
