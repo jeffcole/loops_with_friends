@@ -7,42 +7,95 @@ import Audio
 import Types exposing (..)
 
 
-initialState : (String, Cmd Msg)
+initialState : (Model, Cmd Msg)
 initialState =
-  (""
-  , Cmd.none
+  ( Model Stopped NotLoaded
+  , performLoadSound
   )
 
 
-update : Msg -> a -> (a, Cmd Msg)
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     Play ->
-      (model, initSound)
+      ( { model | state = Playing }
+      , performPlaySound model.sound
+      )
+
+    Stop ->
+      ( model
+      , performStopSound model.sound
+      )
+
+    LoadSucceed audioSound ->
+      ( { model | sound = Loaded audioSound }
+      , Cmd.none
+      )
+
+    LoadFail error ->
+      (model, Cmd.none)
+
     PlaySucceed () ->
-      (model, Cmd.none)
+      stoppedModel model
+
     PlayFail error ->
+      stoppedModel model
+
+    StopSucceed () ->
+      stoppedModel model
+
+    StopFail never ->
       (model, Cmd.none)
+
+
+performLoadSound : Cmd Msg
+performLoadSound =
+  let
+    url = "sounds/80s_Back_Beat_01.m4a"
+  in
+    Task.perform LoadFail LoadSucceed (loadSound url)
+
+
+loadSound : String -> Task String Audio.Sound
+loadSound url =
+  Audio.loadSound url
+
+
+performPlaySound : Sound -> Cmd Msg
+performPlaySound sound =
+  case sound of
+    Loaded audioSound ->
+      Task.perform PlayFail PlaySucceed (playSound audioSound)
+    NotLoaded ->
+      Cmd.none
+
+
+playSound : Audio.Sound -> Task String ()
+playSound audioSound =
+  Audio.playSound Audio.defaultPlaybackOptions audioSound
+
+
+performStopSound : Sound -> Cmd Msg
+performStopSound sound =
+  case sound of
+    Loaded audioSound ->
+      Task.perform StopFail StopSucceed (stopSound audioSound)
+    NotLoaded ->
+      Cmd.none
+
+
+stopSound : Audio.Sound -> Task Never ()
+stopSound audioSound =
+  Audio.stopSound audioSound
+
+
+stoppedModel : Model -> (Model, Cmd Msg)
+stoppedModel model =
+    ( { model | state = Stopped }
+    , Cmd.none
+    )
 
 
 subscriptions : a -> Sub b
 subscriptions model =
   Sub.none
-
-
-initSound : Cmd Msg
-initSound =
-  let
-    url = "sounds/80s_Back_Beat_01.m4a"
-  in
-    Task.perform PlayFail PlaySucceed (loadAndPlaySound url)
-
-
-loadAndPlaySound : String -> Task String ()
-loadAndPlaySound url =
-  Audio.loadSound url `andThen` playSound
-
-
-playSound : Audio.Sound -> Task String ()
-playSound =
-  Task.mapError (\_ -> "") << Audio.playSound Audio.defaultPlaybackOptions

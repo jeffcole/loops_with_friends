@@ -8,12 +8,16 @@ import Html.Events exposing (..)
 import Types exposing (..)
 
 
-root : a -> Html Msg
+root : Model -> Html Msg
 root model =
     div [ class "container" ]
         [ section [ class "welcome" ]
             [ h1 [] [ text "Loops" ]
             , h2 [] [ text "With Friends" ]
             ]
-          , button [ onClick Play ] [ text "Play" ]
+          , case model.state of
+              Stopped ->
+                button [ onClick Play ] [ text "Play" ]
+              Playing ->
+                button [ onClick Stop ] [ text "Stop" ]
         ]
