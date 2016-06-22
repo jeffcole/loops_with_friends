@@ -1,7 +1,7 @@
 module Types exposing (..)
 
 
-import Audio
+import WebAudio
 
 
 type alias Model =
@@ -16,16 +16,16 @@ type State
 
 
 type Sound
-  = Loaded Audio.Sound
+  = Loaded WebAudio.Sound
   | NotLoaded
 
 
 type Msg
   = Play
   | Stop
-  | LoadSucceed Audio.Sound
+  | LoadSucceed WebAudio.Sound
   | LoadFail String
-  | PlaySucceed ()
+  | PlaySucceed WebAudio.Sound
   | PlayFail String
   | StopSucceed ()
   | StopFail Never

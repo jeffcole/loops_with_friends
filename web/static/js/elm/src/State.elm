@@ -1,9 +1,9 @@
 module State exposing (initialState, update, subscriptions)
 
 
-import Task exposing (Task, andThen)
+import Task exposing (Task)
 
-import Audio exposing (defaultPlaybackOptions)
+import WebAudio
 import Types exposing (..)
 
 
@@ -18,7 +18,7 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     Play ->
-      ( { model | state = Playing }
+      ( model
       , performPlaySound model.sound
       )
 
@@ -35,14 +35,18 @@ update msg model =
     LoadFail error ->
       (model, Cmd.none)
 
-    PlaySucceed () ->
-      stoppedModel model
+    PlaySucceed audioSound ->
+      ( Model Playing (Loaded audioSound)
+      , Cmd.none
+      )
 
     PlayFail error ->
-      stoppedModel model
+      (model, Cmd.none)
 
     StopSucceed () ->
-      stoppedModel model
+      ( { model | state = Stopped }
+      , Cmd.none
+      )
 
     StopFail never ->
       (model, Cmd.none)
@@ -56,9 +60,9 @@ performLoadSound =
     Task.perform LoadFail LoadSucceed (loadSound url)
 
 
-loadSound : String -> Task String Audio.Sound
+loadSound : String -> Task String WebAudio.Sound
 loadSound url =
-  Audio.loadSound url
+  WebAudio.loadSound url
 
 
 performPlaySound : Sound -> Cmd Msg
@@ -70,14 +74,9 @@ performPlaySound sound =
       Cmd.none
 
 
-playSound : Audio.Sound -> Task String ()
+playSound : WebAudio.Sound -> Task String WebAudio.Sound
 playSound audioSound =
-  Audio.playSound loopPlaybackOptions audioSound
-
-
-loopPlaybackOptions : Audio.PlaybackOptions
-loopPlaybackOptions =
-  { defaultPlaybackOptions | loop = True }
+  WebAudio.playSound audioSound
 
 
 performStopSound : Sound -> Cmd Msg
@@ -89,16 +88,9 @@ performStopSound sound =
       Cmd.none
 
 
-stopSound : Audio.Sound -> Task Never ()
+stopSound : WebAudio.Sound -> Task Never ()
 stopSound audioSound =
-  Audio.stopSound audioSound
-
-
-stoppedModel : Model -> (Model, Cmd Msg)
-stoppedModel model =
-    ( { model | state = Stopped }
-    , Cmd.none
-    )
+  WebAudio.stopSound audioSound
 
 
 subscriptions : a -> Sub b
