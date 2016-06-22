@@ -3,7 +3,7 @@ module State exposing (initialState, update, subscriptions)
 
 import Task exposing (Task, andThen)
 
-import Audio
+import Audio exposing (defaultPlaybackOptions)
 import Types exposing (..)
 
 
@@ -72,7 +72,12 @@ performPlaySound sound =
 
 playSound : Audio.Sound -> Task String ()
 playSound audioSound =
-  Audio.playSound Audio.defaultPlaybackOptions audioSound
+  Audio.playSound loopPlaybackOptions audioSound
+
+
+loopPlaybackOptions : Audio.PlaybackOptions
+loopPlaybackOptions =
+  { defaultPlaybackOptions | loop = True }
 
 
 performStopSound : Sound -> Cmd Msg
