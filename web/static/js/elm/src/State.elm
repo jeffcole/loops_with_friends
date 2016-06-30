@@ -19,24 +19,24 @@ update msg model =
   case msg of
     Play ->
       ( model
-      , performPlaySound model.sound
+      , performPlayLoop model.loop
       )
 
     Stop ->
       ( model
-      , performStopSound model.sound
+      , performStopLoop model.loop
       )
 
-    LoadSucceed audioSound ->
-      ( { model | sound = Loaded audioSound }
+    LoadSucceed sound ->
+      ( { model | loop = Loaded sound }
       , Cmd.none
       )
 
     LoadFail error ->
       (model, Cmd.none)
 
-    PlaySucceed audioSound ->
-      ( Model Playing (Loaded audioSound)
+    PlaySucceed sound ->
+      ( Model Playing (Loaded sound)
       , Cmd.none
       )
 
@@ -65,32 +65,32 @@ loadSound url =
   WebAudio.loadSound url
 
 
-performPlaySound : Sound -> Cmd Msg
-performPlaySound sound =
-  case sound of
-    Loaded audioSound ->
-      Task.perform PlayFail PlaySucceed (playSound audioSound)
+performPlayLoop : Loop -> Cmd Msg
+performPlayLoop loop =
+  case loop of
+    Loaded sound ->
+      Task.perform PlayFail PlaySucceed (playSound sound)
     NotLoaded ->
       Cmd.none
 
 
 playSound : WebAudio.Sound -> Task String WebAudio.Sound
-playSound audioSound =
-  WebAudio.playSound audioSound
+playSound sound =
+  WebAudio.playSound sound
 
 
-performStopSound : Sound -> Cmd Msg
-performStopSound sound =
-  case sound of
-    Loaded audioSound ->
-      Task.perform StopFail StopSucceed (stopSound audioSound)
+performStopLoop : Loop -> Cmd Msg
+performStopLoop loop =
+  case loop of
+    Loaded sound ->
+      Task.perform StopFail StopSucceed (stopSound sound)
     NotLoaded ->
       Cmd.none
 
 
 stopSound : WebAudio.Sound -> Task Never ()
-stopSound audioSound =
-  WebAudio.stopSound audioSound
+stopSound sound =
+  WebAudio.stopSound sound
 
 
 subscriptions : a -> Sub b

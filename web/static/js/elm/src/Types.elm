@@ -6,7 +6,7 @@ import WebAudio
 
 type alias Model =
   { state : State
-  , sound : Sound
+  , loop : Loop
   }
 
 
@@ -15,7 +15,7 @@ type State
   | Stopped
 
 
-type Sound
+type Loop
   = Loaded WebAudio.Sound
   | NotLoaded
 
