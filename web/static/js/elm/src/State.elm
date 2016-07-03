@@ -1,4 +1,4 @@
-module State exposing (initialState, update, subscriptions)
+port module State exposing (initialState, update, subscriptions)
 
 
 import Task exposing (Task)
@@ -9,7 +9,7 @@ import Types exposing (..)
 
 initialState : (Model, Cmd Msg)
 initialState =
-  ( Model Stopped NotLoaded
+  ( { host = "", state = Stopped, loop = NotLoaded }
   , performLoadSound
   )
 
@@ -17,6 +17,11 @@ initialState =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
+    Host host ->
+      ( { model | host = host }
+      , Cmd.none
+      )
+
     Play ->
       ( model
       , performPlayLoop model.loop
@@ -36,7 +41,7 @@ update msg model =
       (model, Cmd.none)
 
     PlaySucceed sound ->
-      ( Model Playing (Loaded sound)
+      ( { model | state = Playing, loop = Loaded sound }
       , Cmd.none
       )
 
@@ -93,6 +98,9 @@ stopSound sound =
   WebAudio.stopSound sound
 
 
-subscriptions : a -> Sub b
+port host : (String -> msg) -> Sub msg
+
+
+subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  host Host

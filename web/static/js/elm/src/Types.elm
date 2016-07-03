@@ -5,7 +5,8 @@ import WebAudio
 
 
 type alias Model =
-  { state : State
+  { host : String
+  , state : State
   , loop : Loop
   }
 
@@ -21,7 +22,8 @@ type Loop
 
 
 type Msg
-  = Play
+  = Host String
+  | Play
   | Stop
   | LoadSucceed WebAudio.Sound
   | LoadFail String
