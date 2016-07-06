@@ -44,6 +44,9 @@ var _jeffcole$loops$Native_WebAudio = function() {
 
   function playSound(sound) {
     return Task.nativeBinding(function (callback) {
+      // `start` may be called on a buffer source only once, thus we return a
+      // new one with each call to `playSound`.
+      // https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode
       var bufferSource = context.createBufferSource();
 
       bufferSource.buffer = sound.bufferSource.buffer;
