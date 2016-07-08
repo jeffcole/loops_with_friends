@@ -7,9 +7,9 @@ import State
 import View
 
 
-main : Program Never
+main : Program { host : String }
 main =
-  Html.App.program
+  Html.App.programWithFlags
     { init = State.initialState
     , update = State.update
     , view = View.root

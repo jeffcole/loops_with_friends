@@ -1,13 +1,9 @@
 <script type="text/javascript">
 
   document.addEventListener("DOMContentLoaded", function (event) {
-    var elmApp = Elm.App.fullscreen();
-
-    // `setTimeout` is necessary because of
-    // https://github.com/elm-lang/core/issues/595
-    setTimeout(function () {
-      elmApp.ports.host.send(document.location.host);
-    }, 0);
+    var elmApp = Elm.App.fullscreen({
+      host: document.location.host
+    });
   });
 
 </script>

@@ -11,5 +11,4 @@ type alias Model =
 
 
 type Msg
-  = Host String
-  | Loop Loop.Types.Msg
+  = Loop Loop.Types.Msg

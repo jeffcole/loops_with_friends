@@ -1,4 +1,4 @@
-port module State exposing (initialState, update, subscriptions)
+module State exposing (initialState, update, subscriptions)
 
 
 import Types exposing (..)
@@ -6,12 +6,12 @@ import Types exposing (..)
 import Loop.State
 
 
-initialState : (Model, Cmd Msg)
-initialState =
+initialState : { host : String } -> (Model, Cmd Msg)
+initialState flags =
   let
     (loop, loopCmds) = Loop.State.initialState
   in
-    ( { host = ""
+    ( { host = flags.host
       , loop = loop
       }
     , Cmd.map Loop loopCmds
@@ -21,11 +21,6 @@ initialState =
 update : Msg -> Model -> (Model, Cmd Msg)
 update message model =
   case message of
-    Host host ->
-      ( { model | host = host }
-      , Cmd.none
-      )
-
     Loop msg ->
       let
         (loop, loopCmds) = Loop.State.update msg model.loop
@@ -35,9 +30,6 @@ update message model =
         )
 
 
-port host : (String -> msg) -> Sub msg
-
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  host Host
+  Sub.none
