@@ -1,6 +1,11 @@
 module State exposing (initialState, update, subscriptions)
 
 
+import Phoenix.Channel
+import Phoenix.Push
+import Phoenix.Socket
+
+import Socket
 import Types exposing (..)
 
 import Loop.State
@@ -11,8 +16,8 @@ initialState flags =
   let
     (loop, loopCmds) = Loop.State.initialState
   in
-    ( { host = flags.host
-      , loop = loop
+    ( { loop = loop
+      , socket = Socket.initialSocket flags.host
       }
     , Cmd.map Loop loopCmds
     )
@@ -29,7 +34,15 @@ update message model =
         , Cmd.map Loop loopCmds
         )
 
+    SocketMsg msg ->
+      let
+        ( socket, socketCmds ) = Phoenix.Socket.update msg model.socket
+      in
+        ( { model | socket = socket }
+        , Cmd.map SocketMsg socketCmds
+        )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  Phoenix.Socket.listen model.socket SocketMsg
