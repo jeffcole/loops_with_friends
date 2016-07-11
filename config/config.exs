@@ -14,6 +14,8 @@ config :loops, Loops.Endpoint,
   pubsub: [name: Loops.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+config :loops, ecto_repos: [Loops.Repo]
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

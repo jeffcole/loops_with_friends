@@ -32,8 +32,10 @@ defmodule Loops.ChannelCase do
   end
 
   setup tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Loops.Repo)
+
     unless tags[:async] do
-      Ecto.Adapters.SQL.restart_test_transaction(Loops.Repo, [])
+      Ecto.Adapters.SQL.Sandbox.mode(Loops.Repo, {:shared, self()})
     end
 
     :ok
