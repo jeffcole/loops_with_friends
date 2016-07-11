@@ -2,7 +2,7 @@ defmodule Loops.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", Loops.RoomChannel
+  channel "jams:*", Loops.JamChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

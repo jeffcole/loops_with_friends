@@ -15,11 +15,15 @@ initialState : { host : String } -> (Model, Cmd Msg)
 initialState flags =
   let
     (loop, loopCmds) = Loop.State.initialState
+    (socket, socketCmds) = Socket.joinChannel flags.host
   in
     ( { loop = loop
-      , socket = Socket.initialSocket flags.host
+      , socket = socket
       }
-    , Cmd.map Loop loopCmds
+    , Cmd.batch
+        [ Cmd.map Loop loopCmds
+        , Cmd.map SocketMsg socketCmds
+        ]
     )
 
 
