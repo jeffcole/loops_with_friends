@@ -2,11 +2,10 @@ module Socket exposing (joinChannel)
 
 
 import Json.Encode as JE
-
 import Phoenix.Channel
 import Phoenix.Socket
 
-import Types exposing (Msg)
+import Types exposing (Msg(..))
 
 
 joinChannel :
@@ -23,8 +22,10 @@ channel =
 
 initialSocket : String -> Phoenix.Socket.Socket Msg
 initialSocket host =
-    Phoenix.Socket.init (socketUrl host)
-    |> Phoenix.Socket.withDebug
+  Phoenix.Socket.init (socketUrl host)
+  |> Phoenix.Socket.withDebug
+  |> Phoenix.Socket.on "presence_state" "jams:1" PresenceStateMsg
+  |> Phoenix.Socket.on "presence_diff" "jams:1" PresenceDiffMsg
 
 
 socketUrl : String -> String
@@ -41,4 +42,4 @@ socketProtocol host =
 
 userParams : JE.Value
 userParams =
-  JE.object [ ("user_id", JE.string "1") ]
+  JE.object [ ("user_param", JE.string "User Param") ]

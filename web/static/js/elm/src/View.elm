@@ -17,4 +17,15 @@ root model =
           , h2 [] [ text "With Friends" ]
           ]
         , Html.App.map Loop (Loop.View.root model.loop)
+        , usersView model.users
       ]
+
+
+usersView : List User -> Html Msg
+usersView users =
+  ul [] (List.map userView users)
+
+
+userView : User -> Html Msg
+userView user =
+  li [] [ text user.id ]

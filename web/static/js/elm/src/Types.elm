@@ -1,16 +1,31 @@
 module Types exposing (..)
 
 
-import Loop.Types
+import Json.Encode as JE
+import Phoenix.Presence exposing (PresenceState)
 import Phoenix.Socket
+
+import Loop.Types
 
 
 type alias Model =
   { loop : Loop.Types.Model
+  , users : List User
   , socket : Phoenix.Socket.Socket Msg
+  , presences : PresenceState UserPresence
   }
+
+
+type alias User =
+  { id : String }
+
+
+type alias UserPresence =
+  { loop_name : String }
 
 
 type Msg
   = Loop Loop.Types.Msg
   | SocketMsg (Phoenix.Socket.Msg Msg)
+  | PresenceStateMsg JE.Value
+  | PresenceDiffMsg JE.Value

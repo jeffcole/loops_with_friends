@@ -11,6 +11,7 @@ defmodule Loops do
       supervisor(Loops.Endpoint, []),
       # Start the Ecto repository
       supervisor(Loops.Repo, []),
+      supervisor(Loops.Presence, []),
       # Here you could define other workers and supervisors as children
       # worker(Loops.Worker, [arg1, arg2, arg3]),
     ]

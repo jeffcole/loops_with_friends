@@ -1,8 +1,16 @@
 module State exposing (initialState, update, subscriptions)
 
-
+import Dict exposing (Dict)
+import Json.Decode as JD exposing ((:=))
 import Phoenix.Channel
 import Phoenix.Push
+import Phoenix.Presence exposing
+  ( PresenceState
+  , presenceDiffDecoder
+  , presenceStateDecoder
+  , syncDiff
+  , syncState
+  )
 import Phoenix.Socket
 
 import Socket
@@ -18,7 +26,9 @@ initialState flags =
     (socket, socketCmds) = Socket.joinChannel flags.host
   in
     ( { loop = loop
+      , users = []
       , socket = socket
+      , presences = Dict.empty
       }
     , Cmd.batch
         [ Cmd.map Loop loopCmds
@@ -46,7 +56,40 @@ update message model =
         , Cmd.map SocketMsg socketCmds
         )
 
+    PresenceStateMsg raw ->
+      case JD.decodeValue (presenceStateDecoder userPresenceDecoder) raw of
+        Ok presenceState ->
+          let
+            newPresenceState = model.presences |> syncState presenceState
+            users = Dict.keys newPresenceState |> List.map User
+          in
+            { model | users = users, presences = newPresenceState } ! []
+        Err error ->
+          let
+            _ = Debug.log "Error" error
+          in
+            model ! []
+
+    PresenceDiffMsg raw ->
+      case JD.decodeValue (presenceDiffDecoder userPresenceDecoder) raw of
+        Ok presenceDiff ->
+          let
+            newPresenceState = model.presences |> syncDiff presenceDiff
+            users = Dict.keys newPresenceState |> List.map User
+          in
+            { model | users = users, presences = newPresenceState } ! []
+        Err error ->
+            let
+              _ = Debug.log "Error" error
+            in
+              model ! []
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Phoenix.Socket.listen model.socket SocketMsg
+
+
+userPresenceDecoder : JD.Decoder UserPresence
+userPresenceDecoder =
+    JD.object1 UserPresence ("loop_name" := JD.string)
