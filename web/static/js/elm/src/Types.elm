@@ -10,6 +10,7 @@ import Loop.Types
 
 type alias Model =
   { loop : Loop.Types.Model
+  , userId : String
   , users : List User
   , socket : Phoenix.Socket.Socket Msg
   , presences : PresenceState UserPresence
@@ -26,6 +27,7 @@ type alias UserPresence =
 
 type Msg
   = Loop Loop.Types.Msg
+  | SetUserId String
   | SocketMsg (Phoenix.Socket.Msg Msg)
   | PresenceStateMsg JE.Value
   | PresenceDiffMsg JE.Value

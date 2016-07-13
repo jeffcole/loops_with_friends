@@ -17,7 +17,7 @@ root model =
           , h2 [] [ text "With Friends" ]
           ]
         , Html.App.map Loop (Loop.View.root model.loop)
-        , usersView model.users
+        , usersView (otherUsers model)
       ]
 
 
@@ -29,3 +29,8 @@ usersView users =
 userView : User -> Html Msg
 userView user =
   li [] [ text user.id ]
+
+
+otherUsers : Model -> List User
+otherUsers model =
+  List.filter (\user -> user.id /= model.userId) model.users

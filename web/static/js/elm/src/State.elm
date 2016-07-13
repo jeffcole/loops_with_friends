@@ -26,6 +26,7 @@ initialState flags =
     (socket, socketCmds) = Socket.joinChannel flags.host
   in
     ( { loop = loop
+      , userId = ""
       , users = []
       , socket = socket
       , presences = Dict.empty
@@ -47,6 +48,9 @@ update message model =
         ( { model | loop = loop }
         , Cmd.map Loop loopCmds
         )
+
+    SetUserId id ->
+      { model | userId = id } ! []
 
     SocketMsg msg ->
       let

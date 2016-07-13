@@ -1,6 +1,7 @@
 module Socket exposing (joinChannel)
 
 
+import Json.Decode as JD exposing ((:=))
 import Json.Encode as JE
 import Phoenix.Channel
 import Phoenix.Socket
@@ -18,6 +19,19 @@ channel : Phoenix.Channel.Channel Msg
 channel =
   Phoenix.Channel.init "jams:1"
   |> Phoenix.Channel.withPayload userParams
+  |> Phoenix.Channel.onJoin setUserId
+
+
+setUserId : JE.Value -> Msg
+setUserId raw =
+  SetUserId (decodeUserId raw)
+
+
+decodeUserId : JE.Value -> String
+decodeUserId raw =
+  case JD.decodeValue ("user_id" := JD.string) raw of
+    Ok userId -> userId
+    Err message -> ""
 
 
 initialSocket : String -> Phoenix.Socket.Socket Msg
