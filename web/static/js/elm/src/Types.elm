@@ -22,7 +22,7 @@ type alias User =
 
 
 type alias UserPresence =
-  { loop_name : String }
+  { loopName : String }
 
 
 type Msg

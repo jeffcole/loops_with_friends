@@ -1,7 +1,9 @@
 module State exposing (initialState, update, subscriptions)
 
+import Debug
 import Dict exposing (Dict)
 import Json.Decode as JD exposing ((:=))
+import Json.Decode.Pipeline as JDP
 import Phoenix.Channel
 import Phoenix.Push
 import Phoenix.Presence exposing
@@ -96,4 +98,5 @@ subscriptions model =
 
 userPresenceDecoder : JD.Decoder UserPresence
 userPresenceDecoder =
-    JD.object1 UserPresence ("loop_name" := JD.string)
+    JDP.decode UserPresence
+      |> JDP.required "loop_name" JD.string
