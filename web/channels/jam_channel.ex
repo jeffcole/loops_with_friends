@@ -13,6 +13,7 @@ defmodule Loops.JamChannel do
 
   def handle_info(:after_join, socket) do
     Presence.track(socket, socket.assigns.user_id, %{
+      user_id: socket.assigns.user_id,
       loop_name: "80s_Back_Beat_01"
     })
 

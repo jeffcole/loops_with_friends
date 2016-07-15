@@ -9,8 +9,9 @@ import Loop.Types
 
 
 type alias Model =
-  { loop : Loop.Types.Model
-  , userId : String
+  { userId : String
+  , loopName : String
+  , loop : Loop.Types.Model
   , users : List User
   , socket : Phoenix.Socket.Socket Msg
   , presences : PresenceState UserPresence
@@ -18,11 +19,15 @@ type alias Model =
 
 
 type alias User =
-  { id : String }
+  { id : String
+  , loopName : String
+  }
 
 
 type alias UserPresence =
-  { loopName : String }
+  { userId : String
+  , loopName : String
+  }
 
 
 type Msg
