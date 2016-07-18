@@ -8,13 +8,13 @@ import WebAudio
 import Loop.Types exposing (..)
 
 
-initialState : (Model, Cmd Msg)
-initialState =
+initialState : String -> (Model, Cmd Msg)
+initialState name =
   ( { sound = NotLoaded
     , state = Stopped
     }
   ,
-    performLoad
+    performLoad name
   )
 
 
@@ -56,10 +56,10 @@ update msg model =
       (model, Cmd.none)
 
 
-performLoad : Cmd Msg
-performLoad =
+performLoad : String -> Cmd Msg
+performLoad name =
   let
-    url = "sounds/80s_Back_Beat_01.m4a"
+    url = "sounds/" ++ name ++ ".m4a"
   in
     Task.perform LoadFail LoadSucceed (loadSound url)
 

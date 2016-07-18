@@ -16,11 +16,12 @@ import Presence.State
 initialState : { host : String } -> (Model, Cmd Msg)
 initialState flags =
   let
-    (loop, loopCmds) = Loop.State.initialState
+    loopName = "80s_Back_Beat_01"
+    (loop, loopCmds) = Loop.State.initialState loopName
     (socket, socketCmds) = Socket.joinChannel flags.host
   in
     ( { userId = ""
-      , loopName = "80s_Back_Beat_01"
+      , loopName = loopName
       , loop = loop
       , users = []
       , socket = socket
