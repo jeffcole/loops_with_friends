@@ -21,7 +21,7 @@ type alias Model =
 
 
 type Msg
-  = Loop Loop.Types.Msg
+  = LoopMsg Loop.Types.Msg
   | SetUserId String
   | SocketMsg (Phoenix.Socket.Msg Msg)
   | PresenceStateMsg JE.Value

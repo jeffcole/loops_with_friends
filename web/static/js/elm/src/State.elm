@@ -28,7 +28,7 @@ initialState flags =
       , presences = Dict.empty
       }
     , Cmd.batch
-        [ Cmd.map Loop loopCmds
+        [ Cmd.map LoopMsg loopCmds
         , Cmd.map SocketMsg socketCmds
         ]
     )
@@ -37,12 +37,12 @@ initialState flags =
 update : Msg -> Model -> (Model, Cmd Msg)
 update message model =
   case message of
-    Loop msg ->
+    LoopMsg msg ->
       let
         (loop, loopCmds) = Loop.State.update msg model.loop
       in
         ( { model | loop = loop }
-        , Cmd.map Loop loopCmds
+        , Cmd.map LoopMsg loopCmds
         )
 
     SetUserId id ->
@@ -58,10 +58,12 @@ update message model =
 
     PresenceStateMsg json ->
       let
-        (users, presences) =
+        (users, presences, cmds) =
           Presence.State.updatePresenceState model.presences json
       in
-        { model | users = users, presences = presences } ! []
+        ( { model | users = users, presences = presences }
+        , Cmd.map LoopMsg cmds
+        )
 
     PresenceDiffMsg json ->
       let

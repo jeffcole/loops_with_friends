@@ -16,26 +16,28 @@ import Phoenix.Presence exposing
   )
 
 import Presence.Types exposing (..)
+import Loop.State
+import Loop.Types
 import User.Types
 
 
 updatePresenceState
   :  PresenceState UserPresence
   -> Json.Encode.Value
-  -> (List User.Types.Model, PresenceState UserPresence)
+  -> (List User.Types.Model, PresenceState UserPresence, Cmd Loop.Types.Msg)
 updatePresenceState presences json =
   case decodePresenceState json of
     Ok presenceState ->
       let
         newPresenceState = syncState presences presenceState
-        users = presenceStateToUsers newPresenceState
+        (users, cmds) = presenceStateToUsersAndCmds newPresenceState
       in
-        (users, newPresenceState)
+        (users, newPresenceState, cmds)
     Err error ->
       let
         _ = Debug.log "Error" error
       in
-        ([], presences)
+        ([], presences, Cmd.none)
 
 
 updatePresenceDiff
@@ -87,7 +89,23 @@ syncDiff presences presenceDiff =
   |> Phoenix.Presence.syncDiff presenceDiff
 
 
-presenceStateToUsers : PresenceState UserPresence -> List User.Types.Model
+presenceStateToUsersAndCmds
+  : PresenceState UserPresence -> (List User.Types.Model, Cmd Loop.Types.Msg)
+presenceStateToUsersAndCmds presenceState =
+  let
+    (users, cmds) =
+      presenceState
+      |> Phoenix.Presence.list mostRecent
+      |> List.filterMap identity
+      |> List.map toUserPresence
+      |> List.map toUserAndCmds
+      |> List.unzip
+  in
+    (users, Cmd.batch cmds)
+
+
+presenceStateToUsers
+  : PresenceState UserPresence -> List User.Types.Model
 presenceStateToUsers presenceState =
   presenceState
   |> Phoenix.Presence.list mostRecent
@@ -109,13 +127,26 @@ toUserPresence value =
   value.payload
 
 
+toUserAndCmds : UserPresence -> (User.Types.Model, Cmd Loop.Types.Msg)
+toUserAndCmds userPresence =
+  let
+    (loop, loopCmds) = Loop.State.initialState userPresence.loopName
+    user = User.Types.Model userPresence.userId userPresence.loopName loop
+  in
+    (user, loopCmds)
+
+
 toUser : UserPresence -> User.Types.Model
 toUser userPresence =
-  User.Types.Model userPresence.userId userPresence.loopName
+  let
+    (loop, loopCmds) = Loop.State.initialState userPresence.loopName
+    user = User.Types.Model userPresence.userId userPresence.loopName loop
+  in
+    user
 
 
 userPresenceDecoder : JD.Decoder UserPresence
 userPresenceDecoder =
-    JDP.decode UserPresence
-      |> JDP.required "user_id" JD.string
-      |> JDP.required "loop_name" JD.string
+  JDP.decode UserPresence
+    |> JDP.required "user_id" JD.string
+    |> JDP.required "loop_name" JD.string

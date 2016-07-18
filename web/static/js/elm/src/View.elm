@@ -18,7 +18,7 @@ root model =
           [ h1 [] [ text "Loops" ]
           , h2 [] [ text "With Friends" ]
           ]
-        , Html.App.map Loop (Loop.View.root model.loop)
+        , Html.App.map LoopMsg (Loop.View.root model.loop)
         , usersView (otherUsers model)
       ]
 
