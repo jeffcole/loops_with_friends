@@ -6,27 +6,17 @@ import Phoenix.Presence exposing (PresenceState)
 import Phoenix.Socket
 
 import Loop.Types
+import Presence.Types
+import User.Types
 
 
 type alias Model =
   { userId : String
   , loopName : String
   , loop : Loop.Types.Model
-  , users : List User
+  , users : List User.Types.Model
   , socket : Phoenix.Socket.Socket Msg
-  , presences : PresenceState UserPresence
-  }
-
-
-type alias User =
-  { id : String
-  , loopName : String
-  }
-
-
-type alias UserPresence =
-  { userId : String
-  , loopName : String
+  , presences : PresenceState Presence.Types.UserPresence
   }
 
 

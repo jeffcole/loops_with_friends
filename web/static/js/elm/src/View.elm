@@ -6,7 +6,9 @@ import Html.App
 import Html.Attributes exposing (..)
 
 import Types exposing (..)
+
 import Loop.View
+import User.Types
 
 
 root : Model -> Html Msg
@@ -21,16 +23,16 @@ root model =
       ]
 
 
-usersView : List User -> Html Msg
+usersView : List User.Types.Model -> Html Msg
 usersView users =
   ul [] (List.map userView users)
 
 
-userView : User -> Html Msg
+userView : User.Types.Model -> Html Msg
 userView user =
   li [] [ text user.id ]
 
 
-otherUsers : Model -> List User
+otherUsers : Model -> List User.Types.Model
 otherUsers model =
   List.filter (\user -> user.id /= model.userId) model.users

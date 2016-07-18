@@ -23,13 +23,13 @@ channel =
 
 
 setUserId : JE.Value -> Msg
-setUserId raw =
-  SetUserId (decodeUserId raw)
+setUserId json =
+  SetUserId (decodeUserId json)
 
 
 decodeUserId : JE.Value -> String
-decodeUserId raw =
-  case JD.decodeValue ("user_id" := JD.string) raw of
+decodeUserId json =
+  case JD.decodeValue ("user_id" := JD.string) json of
     Ok userId -> userId
     Err message -> ""
 
