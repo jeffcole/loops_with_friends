@@ -22,6 +22,19 @@ channel =
   |> Phoenix.Channel.onJoin setUserId
 
 
+initialSocket : String -> Phoenix.Socket.Socket Msg
+initialSocket host =
+  Phoenix.Socket.init (socketUrl host)
+  |> Phoenix.Socket.withDebug
+  |> Phoenix.Socket.on "presence_state" "jams:1" PresenceStateMsg
+  |> Phoenix.Socket.on "presence_diff" "jams:1" PresenceDiffMsg
+
+
+userParams : JE.Value
+userParams =
+  JE.object [ ("user_param", JE.string "User Param") ]
+
+
 setUserId : JE.Value -> Msg
 setUserId json =
   SetUserId (decodeUserId json)
@@ -34,14 +47,6 @@ decodeUserId json =
     Err message -> ""
 
 
-initialSocket : String -> Phoenix.Socket.Socket Msg
-initialSocket host =
-  Phoenix.Socket.init (socketUrl host)
-  |> Phoenix.Socket.withDebug
-  |> Phoenix.Socket.on "presence_state" "jams:1" PresenceStateMsg
-  |> Phoenix.Socket.on "presence_diff" "jams:1" PresenceDiffMsg
-
-
 socketUrl : String -> String
 socketUrl host =
   socketProtocol host ++ host ++ "/socket/websocket"
@@ -52,8 +57,3 @@ socketProtocol host =
   if host == "localhost:4000"
     then "ws://"
     else "wss://"
-
-
-userParams : JE.Value
-userParams =
-  JE.object [ ("user_param", JE.string "User Param") ]

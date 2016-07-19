@@ -37,6 +37,9 @@ initialState flags =
 update : Msg -> Model -> (Model, Cmd Msg)
 update message model =
   case message of
+    SetUserId id ->
+      { model | userId = id } ! []
+    
     LoopMsg msg ->
       let
         (loop, loopCmds) = Loop.State.update msg model.loop
@@ -44,9 +47,6 @@ update message model =
         ( { model | loop = loop }
         , Cmd.map LoopMsg loopCmds
         )
-
-    SetUserId id ->
-      { model | userId = id } ! []
 
     SocketMsg msg ->
       let
