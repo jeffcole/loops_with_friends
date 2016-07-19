@@ -1,6 +1,7 @@
 module User.Types exposing (..)
 
 
+import Dict exposing (Dict)
 import Loop.Types
 
 
@@ -12,3 +13,7 @@ type alias Model =
   , loopName : String
   , loop : Loop.Types.Model
   }
+
+
+type alias Collection =
+  Dict ID Model

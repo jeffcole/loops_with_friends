@@ -2,6 +2,7 @@ module Presence.State exposing (updatePresenceState, updatePresenceDiff)
 
 
 import Debug
+import Dict exposing (Dict)
 import Json.Encode
 import Json.Decode as JD exposing ((:=))
 import Json.Decode.Pipeline as JDP
@@ -24,7 +25,7 @@ import User.Types
 updatePresenceState
   :  PresenceState UserPresence
   -> Json.Encode.Value
-  -> (List User.Types.Model, PresenceState UserPresence, Cmd Loop.Types.Msg)
+  -> (User.Types.Collection, PresenceState UserPresence, Cmd Loop.Types.Msg)
 updatePresenceState presences json =
   case decodePresenceState json of
     Ok presenceState ->
@@ -37,13 +38,13 @@ updatePresenceState presences json =
       let
         _ = Debug.log "Error" error
       in
-        ([], presences, Cmd.none)
+        (Dict.empty, presences, Cmd.none)
 
 
 updatePresenceDiff
   :  PresenceState UserPresence
   -> Json.Encode.Value
-  -> (List User.Types.Model, PresenceState UserPresence)
+  -> (User.Types.Collection, PresenceState UserPresence)
 updatePresenceDiff presences json =
   case decodePresenceDiff json of
     Ok presenceDiff ->
@@ -53,10 +54,10 @@ updatePresenceDiff presences json =
       in
         (users, newPresenceState)
     Err error ->
-        let
-          _ = Debug.log "Error" error
-        in
-          ([], presences)
+      let
+        _ = Debug.log "Error" error
+      in
+        (Dict.empty, presences)
 
 
 decodePresenceState
@@ -90,28 +91,31 @@ syncDiff presences presenceDiff =
 
 
 presenceStateToUsersAndCmds
-  : PresenceState UserPresence -> (List User.Types.Model, Cmd Loop.Types.Msg)
+  :  PresenceState UserPresence
+  -> (User.Types.Collection, Cmd Loop.Types.Msg)
 presenceStateToUsersAndCmds presenceState =
   let
-    (users, cmds) =
+    (userAssociations, cmds) =
       presenceState
       |> Phoenix.Presence.list mostRecent
       |> List.filterMap identity
       |> List.map toUserPresence
-      |> List.map toUserAndCmds
+      |> List.map toUserAssociationAndCmds
       |> List.unzip
+    users = Dict.fromList userAssociations
   in
     (users, Cmd.batch cmds)
 
 
 presenceStateToUsers
-  : PresenceState UserPresence -> List User.Types.Model
+  : PresenceState UserPresence -> User.Types.Collection
 presenceStateToUsers presenceState =
   presenceState
   |> Phoenix.Presence.list mostRecent
   |> List.filterMap identity
   |> List.map toUserPresence
-  |> List.map toUser
+  |> List.map toUserAssociation
+  |> Dict.fromList
 
 
 mostRecent
@@ -127,22 +131,24 @@ toUserPresence value =
   value.payload
 
 
-toUserAndCmds : UserPresence -> (User.Types.Model, Cmd Loop.Types.Msg)
-toUserAndCmds userPresence =
+toUserAssociationAndCmds
+  : UserPresence -> ((User.Types.ID, User.Types.Model), Cmd Loop.Types.Msg)
+toUserAssociationAndCmds userPresence =
+  let
+    (loop, loopCmds) = Loop.State.initialState userPresence.loopName
+    user = User.Types.Model userPresence.userId userPresence.loopName loop
+    userAssociation = (user.id, user)
+  in
+    (userAssociation, loopCmds)
+
+
+toUserAssociation : UserPresence -> (User.Types.ID, User.Types.Model)
+toUserAssociation userPresence =
   let
     (loop, loopCmds) = Loop.State.initialState userPresence.loopName
     user = User.Types.Model userPresence.userId userPresence.loopName loop
   in
-    (user, loopCmds)
-
-
-toUser : UserPresence -> User.Types.Model
-toUser userPresence =
-  let
-    (loop, loopCmds) = Loop.State.initialState userPresence.loopName
-    user = User.Types.Model userPresence.userId userPresence.loopName loop
-  in
-    user
+    (user.id, user)
 
 
 userPresenceDecoder : JD.Decoder UserPresence

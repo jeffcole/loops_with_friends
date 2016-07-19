@@ -23,7 +23,7 @@ initialState flags =
     ( { userId = ""
       , loopName = loopName
       , loop = loop
-      , users = []
+      , users = Dict.empty
       , socket = socket
       , presences = Dict.empty
       }

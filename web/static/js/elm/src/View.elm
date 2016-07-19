@@ -1,6 +1,7 @@
 module View exposing (root)
 
 
+import Dict exposing (Dict)
 import Html exposing (..)
 import Html.App
 import Html.Attributes exposing (..)
@@ -24,11 +25,12 @@ root model =
       ]
 
 
-usersView : List User.Types.Model -> Html Msg
+usersView : User.Types.Collection -> Html Msg
 usersView users =
-  ul [] (List.map User.View.root users)
+  ul [] (Dict.values users |> List.map User.View.root)
 
 
-otherUsers : Model -> List User.Types.Model
+otherUsers : Model -> User.Types.Collection
 otherUsers model =
-  List.filter (\user -> user.id /= model.userId) model.users
+  model.users
+  |> Dict.filter (\userId user -> userId /= model.userId)

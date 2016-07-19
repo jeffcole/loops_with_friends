@@ -1,6 +1,7 @@
 module Types exposing (..)
 
 
+import Dict exposing (Dict)
 import Json.Encode as JE
 import Phoenix.Presence exposing (PresenceState)
 import Phoenix.Socket
@@ -14,7 +15,7 @@ type alias Model =
   { userId : User.Types.ID
   , loopName : String
   , loop : Loop.Types.Model
-  , users : List User.Types.Model
+  , users : User.Types.Collection
   , socket : Phoenix.Socket.Socket Msg
   , presences : PresenceState Presence.Types.UserPresence
   }
