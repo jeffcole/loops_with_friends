@@ -12,7 +12,7 @@ player model =
   case model.state of
     Playing ->
       stopButton
-    Stopped ->
+    NotPlaying ->
       playButton
 
 
@@ -21,7 +21,7 @@ display model =
   case model.state of
     Playing ->
       text "Playing"
-    Stopped ->
+    NotPlaying ->
       text "Stopped"
 
 

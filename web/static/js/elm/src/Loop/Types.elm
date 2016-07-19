@@ -17,7 +17,7 @@ type Sound
 
 type State
   = Playing
-  | Stopped
+  | NotPlaying
 
 
 type Msg
@@ -29,3 +29,8 @@ type Msg
   | PlayFail String
   | StopSucceed ()
   | StopFail Never
+
+type OutMsg
+  = Played
+  | Stopped
+  | NoMsg

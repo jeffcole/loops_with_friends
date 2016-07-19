@@ -11,49 +11,54 @@ import Loop.Types exposing (..)
 initialState : String -> (Model, Cmd Msg)
 initialState name =
   ( { sound = NotLoaded
-    , state = Stopped
+    , state = NotPlaying
     }
   ,
     performLoad name
   )
 
 
-update : Msg -> Model -> (Model, Cmd Msg)
+update : Msg -> Model -> (Model, Cmd Msg, OutMsg)
 update msg model =
   case msg of
     LoadSucceed sound ->
       ( { model | sound = Loaded sound }
       , Cmd.none
+      , NoMsg
       )
 
     LoadFail error ->
-      (model, Cmd.none)
+      (model, Cmd.none, NoMsg)
 
     Play ->
       ( model
       , performPlay model.sound
+      , NoMsg
       )
 
     PlaySucceed sound ->
       ( { model | state = Playing, sound = Loaded sound }
       , Cmd.none
+      , Played
       )
 
     PlayFail error ->
-      (model, Cmd.none)
+      (model, Cmd.none, NoMsg)
 
     Stop ->
       ( model
       , performStop model.sound
+      , NoMsg
       )
 
     StopSucceed () ->
-      ( { model | state = Stopped }
+      ( { model | state = NotPlaying }
       , Cmd.none
+      , Stopped
       )
 
     StopFail never ->
-      (model, Cmd.none)
+      (model, Cmd.none, NoMsg)
 
 
 performLoad : String -> Cmd Msg

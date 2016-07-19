@@ -3,6 +3,8 @@ defmodule Loops.JamChannel do
 
   alias Loops.Presence
 
+  intercept ["loop:played", "loop:stopped"]
+
   def join("jams:" <> jam_id, _params, socket) do
     send self(), :after_join
 
@@ -18,6 +20,20 @@ defmodule Loops.JamChannel do
     })
 
     push socket, "presence_state", Presence.list(socket)
+
+    {:noreply, socket}
+  end
+
+  def handle_in("loop:" <> event, %{"user_id" => user_id}, socket) do
+    broadcast! socket, "loop:#{event}", %{user_id: user_id}
+
+    {:noreply, socket}
+  end
+
+  def handle_out("loop:" <> event, message, socket) do
+    unless socket.assigns.user_id == message.user_id do
+      push socket, "loop:#{event}", message
+    end
 
     {:noreply, socket}
   end

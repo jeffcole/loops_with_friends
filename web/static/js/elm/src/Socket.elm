@@ -1,18 +1,49 @@
-module Socket exposing (joinChannel)
+module Socket exposing (joinChannel, pushLoopMsg)
 
 
 import Json.Decode as JD exposing ((:=))
 import Json.Encode as JE
 import Phoenix.Channel
+import Phoenix.Push
 import Phoenix.Socket
 
 import Types exposing (Msg(..))
+
+import Loop.Types
 
 
 joinChannel :
   String -> (Phoenix.Socket.Socket Msg, Cmd (Phoenix.Socket.Msg Msg))
 joinChannel host =
   Phoenix.Socket.join channel (initialSocket host)
+
+
+pushLoopMsg
+  :  Loop.Types.OutMsg
+  -> String
+  -> Phoenix.Socket.Socket msg
+  -> (Phoenix.Socket.Socket msg, Cmd (Phoenix.Socket.Msg msg))
+pushLoopMsg message userId socket =
+  case message of
+    Loop.Types.Played ->
+      Phoenix.Socket.push (push userId "played") socket
+
+    Loop.Types.Stopped ->
+      Phoenix.Socket.push (push userId "stopped") socket
+
+    Loop.Types.NoMsg ->
+      (socket, Cmd.none)
+
+
+push : String -> String -> Phoenix.Push.Push msg
+push userId event =
+  Phoenix.Push.init ("loop:" ++ event) "jams:1"
+    |> Phoenix.Push.withPayload (pushPayload userId)
+
+
+pushPayload : String -> JE.Value
+pushPayload userId =
+  JE.object [ ("user_id", JE.string userId) ]
 
 
 channel : Phoenix.Channel.Channel Msg

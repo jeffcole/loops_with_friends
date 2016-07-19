@@ -39,18 +39,23 @@ update message model =
   case message of
     SetUserId id ->
       { model | userId = id } ! []
-    
+
     LoopMsg msg ->
       let
-        (loop, loopCmds) = Loop.State.update msg model.loop
+        (loop, loopCmds, outMsg) = Loop.State.update msg model.loop
+        (socket, socketCmds) =
+          Socket.pushLoopMsg outMsg model.userId model.socket
       in
-        ( { model | loop = loop }
-        , Cmd.map LoopMsg loopCmds
+        ( { model | loop = loop, socket = socket }
+        , Cmd.batch
+            [ Cmd.map LoopMsg loopCmds
+            , Cmd.map SocketMsg socketCmds
+            ]
         )
 
     SocketMsg msg ->
       let
-        ( socket, socketCmds ) = Phoenix.Socket.update msg model.socket
+        (socket, socketCmds) = Phoenix.Socket.update msg model.socket
       in
         ( { model | socket = socket }
         , Cmd.map SocketMsg socketCmds
