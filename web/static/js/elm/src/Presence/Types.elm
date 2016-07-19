@@ -1,6 +1,10 @@
 module Presence.Types exposing (..)
 
+
+import User.Types
+
+
 type alias UserPresence =
-  { userId : String
+  { userId : User.Types.ID
   , loopName : String
   }

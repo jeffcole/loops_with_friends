@@ -11,7 +11,7 @@ import User.Types
 
 
 type alias Model =
-  { userId : String
+  { userId : User.Types.ID
   , loopName : String
   , loop : Loop.Types.Model
   , users : List User.Types.Model

@@ -10,6 +10,7 @@ import Phoenix.Socket
 import Types exposing (Msg(..))
 
 import Loop.Types
+import User.Types
 
 
 joinChannel :
@@ -20,7 +21,7 @@ joinChannel host =
 
 pushLoopMsg
   :  Loop.Types.OutMsg
-  -> String
+  -> User.Types.ID
   -> Phoenix.Socket.Socket msg
   -> (Phoenix.Socket.Socket msg, Cmd (Phoenix.Socket.Msg msg))
 pushLoopMsg message userId socket =
@@ -35,13 +36,13 @@ pushLoopMsg message userId socket =
       (socket, Cmd.none)
 
 
-push : String -> String -> Phoenix.Push.Push msg
+push : User.Types.ID -> String -> Phoenix.Push.Push msg
 push userId event =
   Phoenix.Push.init ("loop:" ++ event) "jams:1"
     |> Phoenix.Push.withPayload (pushPayload userId)
 
 
-pushPayload : String -> JE.Value
+pushPayload : User.Types.ID -> JE.Value
 pushPayload userId =
   JE.object [ ("user_id", JE.string userId) ]
 
@@ -71,7 +72,7 @@ setUserId json =
   SetUserId (decodeUserId json)
 
 
-decodeUserId : JE.Value -> String
+decodeUserId : JE.Value -> User.Types.ID
 decodeUserId json =
   case JD.decodeValue ("user_id" := JD.string) json of
     Ok userId -> userId
