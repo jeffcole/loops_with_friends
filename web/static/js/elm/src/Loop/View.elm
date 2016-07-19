@@ -1,4 +1,4 @@
-module Loop.View exposing (root)
+module Loop.View exposing (player, display)
 
 
 import Html exposing (..)
@@ -7,13 +7,22 @@ import Html.Events exposing (..)
 import Loop.Types exposing (..)
 
 
-root : Model -> Html Msg
-root model =
+player : Model -> Html Msg
+player model =
   case model.state of
     Playing ->
       stopButton
     Stopped ->
       playButton
+
+
+display : Model -> Html msg
+display model =
+  case model.state of
+    Playing ->
+      text "Playing"
+    Stopped ->
+      text "Stopped"
 
 
 playButton : Html Msg
