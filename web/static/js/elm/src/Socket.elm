@@ -1,4 +1,4 @@
-module Socket exposing (joinChannel, pushPlayerMsg)
+module Socket exposing (joinChannel, pushPlayerMsg, decodeUserId)
 
 
 import Json.Decode as JD exposing ((:=))
@@ -60,6 +60,8 @@ initialSocket host =
   |> Phoenix.Socket.withDebug
   |> Phoenix.Socket.on "presence_state" "jams:1" PresenceStateMsg
   |> Phoenix.Socket.on "presence_diff" "jams:1" PresenceDiffMsg
+  |> Phoenix.Socket.on "loop:played" "jams:1" UserPlayed
+  |> Phoenix.Socket.on "loop:stopped" "jams:1" UserStopped
 
 
 userParams : JE.Value

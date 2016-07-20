@@ -12,6 +12,8 @@ import Types exposing (..)
 import Loop.State
 import Player.State
 import Presence.State
+import User.State
+import User.Types
 
 
 initialState : { host : String } -> (Model, Cmd Msg)
@@ -53,6 +55,27 @@ update message model =
             , Cmd.map SocketMsg socketCmds
             ]
         )
+
+    UserPlayed json ->
+      let
+        userId = Socket.decodeUserId json
+        user =
+          Dict.get userId model.users
+          |> Maybe.withDefault User.State.empty
+        (newUser, cmds) = User.State.update User.Types.Played user
+        users =
+          model.users
+          |> Dict.remove userId
+          |> Dict.insert userId newUser
+      in
+        ( { model | users = users }
+        , Cmd.map LoopMsg cmds
+        )
+
+    UserStopped json ->
+      ( model
+      , Cmd.none
+      )
 
     LoopMsg msg ->
       let

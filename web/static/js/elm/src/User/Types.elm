@@ -17,3 +17,8 @@ type alias Model =
 
 type alias Collection =
   Dict ID Model
+
+
+type Msg 
+  = Played
+  | Stopped

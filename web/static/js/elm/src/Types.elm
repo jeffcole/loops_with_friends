@@ -26,6 +26,8 @@ type Msg
   = SetUserId String
   | PlayerMsg Player.Types.Msg
   | LoopMsg Loop.Types.Msg
+  | UserPlayed JE.Value
+  | UserStopped JE.Value
   | SocketMsg (Phoenix.Socket.Msg Msg)
   | PresenceStateMsg JE.Value
   | PresenceDiffMsg JE.Value
