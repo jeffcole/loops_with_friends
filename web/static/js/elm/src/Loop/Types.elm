@@ -29,8 +29,3 @@ type Msg
   | PlayFail String
   | StopSucceed ()
   | StopFail Never
-
-type OutMsg
-  = Played
-  | Stopped
-  | NoMsg

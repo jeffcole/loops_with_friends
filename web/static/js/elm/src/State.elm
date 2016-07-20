@@ -10,6 +10,7 @@ import Socket
 import Types exposing (..)
 
 import Loop.State
+import Player.State
 import Presence.State
 
 
@@ -40,17 +41,25 @@ update message model =
     SetUserId id ->
       { model | userId = id } ! []
 
-    LoopMsg msg ->
+    PlayerMsg msg ->
       let
-        (loop, loopCmds, outMsg) = Loop.State.update msg model.loop
+        (loop, loopCmds, outMsg) = Player.State.update msg model.loop
         (socket, socketCmds) =
-          Socket.pushLoopMsg outMsg model.userId model.socket
+          Socket.pushPlayerMsg outMsg model.userId model.socket
       in
         ( { model | loop = loop, socket = socket }
         , Cmd.batch
             [ Cmd.map LoopMsg loopCmds
             , Cmd.map SocketMsg socketCmds
             ]
+        )
+
+    LoopMsg msg ->
+      let
+        (loop, loopCmds) = Loop.State.update msg model.loop
+      in
+        ( { model | loop = loop }
+        , Cmd.map LoopMsg loopCmds
         )
 
     SocketMsg msg ->

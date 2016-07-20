@@ -7,6 +7,7 @@ import Phoenix.Presence exposing (PresenceState)
 import Phoenix.Socket
 
 import Loop.Types
+import Player.Types
 import Presence.Types
 import User.Types
 
@@ -23,6 +24,7 @@ type alias Model =
 
 type Msg
   = SetUserId String
+  | PlayerMsg Player.Types.Msg
   | LoopMsg Loop.Types.Msg
   | SocketMsg (Phoenix.Socket.Msg Msg)
   | PresenceStateMsg JE.Value

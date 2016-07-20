@@ -18,47 +18,42 @@ initialState name =
   )
 
 
-update : Msg -> Model -> (Model, Cmd Msg, OutMsg)
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     LoadSucceed sound ->
       ( { model | sound = Loaded sound }
       , Cmd.none
-      , NoMsg
       )
 
     LoadFail error ->
-      (model, Cmd.none, NoMsg)
+      (model, Cmd.none)
 
     Play ->
       ( model
       , performPlay model.sound
-      , NoMsg
       )
 
     PlaySucceed sound ->
       ( { model | state = Playing, sound = Loaded sound }
       , Cmd.none
-      , Played
       )
 
     PlayFail error ->
-      (model, Cmd.none, NoMsg)
+      (model, Cmd.none)
 
     Stop ->
       ( model
       , performStop model.sound
-      , NoMsg
       )
 
     StopSucceed () ->
       ( { model | state = NotPlaying }
       , Cmd.none
-      , Stopped
       )
 
     StopFail never ->
-      (model, Cmd.none, NoMsg)
+      (model, Cmd.none)
 
 
 performLoad : String -> Cmd Msg

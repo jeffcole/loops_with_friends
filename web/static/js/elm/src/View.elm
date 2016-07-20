@@ -8,7 +8,7 @@ import Html.Attributes exposing (..)
 
 import Types exposing (..)
 
-import Loop.View
+import Player.View
 import User.Types
 import User.View
 
@@ -20,7 +20,7 @@ root model =
           [ h1 [] [ text "Loops" ]
           , h2 [] [ text "With Friends" ]
           ]
-        , Html.App.map LoopMsg (Loop.View.player model.loop)
+        , Html.App.map PlayerMsg (Player.View.root model.loop)
         , usersView (otherUsers model)
       ]
 
