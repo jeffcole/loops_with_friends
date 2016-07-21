@@ -8,8 +8,7 @@ import Loop.Types exposing (..)
 
 root : Model -> Html msg
 root model =
-  case model.state of
-    Playing ->
-      text "Playing"
-    NotPlaying ->
-      text "Stopped"
+  ul []
+    [ li [] [ text model.name ]
+    , li [] [ text (toString model.state) ]
+    ]

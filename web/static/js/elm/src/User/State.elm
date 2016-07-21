@@ -1,36 +1,25 @@
-module User.State exposing (empty, update)
+module User.State exposing (empty, playLoop, stopLoop)
 
-
-import Dict exposing (Dict)
 
 import Loop.State
 import Loop.Types
+
 import User.Types exposing (..)
 
 
 empty : Model
 empty =
   let
-    (loop, loopCmds) = Loop.State.initialState ""
+    (loop, loopCmds) = Loop.State.initialState "Empty Loop"
   in
-    Model "" "" loop
+    Model "Empty User" loop
 
 
-update : Msg -> Model -> (Model, Cmd Loop.Types.Msg)
-update message model =
-  case message of
-    Played ->
-      let
-        (loop, loopCmds) = Loop.State.update Loop.Types.Play model.loop
-      in
-        ( { model | loop = loop }
-        , loopCmds
-        )
+playLoop : Model -> Cmd Loop.Types.Msg
+playLoop user =
+  Loop.State.play user.loop
 
-    Stopped ->
-      let
-        (loop, loopCmds) = Loop.State.update Loop.Types.Stop model.loop
-      in
-        ( { model | loop = loop }
-        , loopCmds
-        )
+
+stopLoop : Model -> Cmd Loop.Types.Msg
+stopLoop user =
+  Loop.State.stop user.loop

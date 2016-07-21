@@ -6,88 +6,88 @@ import Phoenix.Channel
 import Phoenix.Push
 import Phoenix.Socket
 
-import Socket
-import Types exposing (..)
-
 import Loop.State
-import Player.State
 import Presence.State
 import User.State
 import User.Types
+
+import Helpers
+import Socket
+import Types exposing (..)
 
 
 initialState : { host : String } -> (Model, Cmd Msg)
 initialState flags =
   let
-    loopName = "80s_Back_Beat_01"
-    (loop, loopCmds) = Loop.State.initialState loopName
     (socket, socketCmds) = Socket.joinChannel flags.host
   in
     ( { userId = ""
-      , loopName = loopName
-      , loop = loop
       , users = Dict.empty
       , socket = socket
       , presences = Dict.empty
       }
-    , Cmd.batch
-        [ Cmd.map LoopMsg loopCmds
-        , Cmd.map SocketMsg socketCmds
-        ]
+    , Cmd.map SocketMsg socketCmds
     )
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
-update message model =
-  case message of
+update msg model =
+  case msg of
     SetUserId id ->
       { model | userId = id } ! []
 
-    PlayerMsg msg ->
+    Play ->
       let
-        (loop, loopCmds, outMsg) = Player.State.update msg model.loop
-        (socket, socketCmds) =
-          Socket.pushPlayerMsg outMsg model.userId model.socket
+        cmds = Helpers.playerUser model |> User.State.playLoop
       in
-        ( { model | loop = loop, socket = socket }
-        , Cmd.batch
-            [ Cmd.map LoopMsg loopCmds
-            , Cmd.map SocketMsg socketCmds
-            ]
-        )
+        (model, Cmd.map (LoopMsg model.userId) cmds)
+
+    Stop ->
+      let
+        cmds = Helpers.playerUser model |> User.State.stopLoop
+      in
+        (model, Cmd.map (LoopMsg model.userId) cmds)
 
     UserPlayed json ->
       let
         userId = Socket.decodeUserId json
-        user =
-          Dict.get userId model.users
-          |> Maybe.withDefault User.State.empty
-        (newUser, cmds) = User.State.update User.Types.Played user
-        users =
-          model.users
-          |> Dict.remove userId
-          |> Dict.insert userId newUser
+        user = Helpers.getUser userId model.users
+        loopCmds = User.State.playLoop user
       in
-        ( { model | users = users }
-        , Cmd.map LoopMsg cmds
+        ( model
+        , Cmd.map (LoopMsg userId) loopCmds
         )
 
     UserStopped json ->
-      ( model
-      , Cmd.none
-      )
-
-    LoopMsg msg ->
       let
-        (loop, loopCmds) = Loop.State.update msg model.loop
+        userId = Socket.decodeUserId json
+        user = Helpers.getUser userId model.users
+        loopCmds = User.State.stopLoop user
       in
-        ( { model | loop = loop }
-        , Cmd.map LoopMsg loopCmds
+        ( model
+        , Cmd.map (LoopMsg userId) loopCmds
         )
 
-    SocketMsg msg ->
+    LoopMsg userId loopMsg ->
       let
-        (socket, socketCmds) = Phoenix.Socket.update msg model.socket
+        user = Helpers.getUser userId model.users
+        -- TODO Forward the message to the user and return
+        -- (user, cmds, outMsg)
+        (loop, loopCmds, outMsg) = Loop.State.update loopMsg user.loop
+        newUser = { user | loop = loop }
+        newUsers = Helpers.updateUser newUser model.users
+        (socket, socketCmds) = Socket.pushLoopMsg outMsg userId model.socket
+      in
+        ( { model | users = newUsers, socket = socket }
+        , Cmd.batch
+            [ Cmd.map (LoopMsg userId) loopCmds
+            , Cmd.map SocketMsg socketCmds
+            ]
+        )
+
+    SocketMsg socketMsg ->
+      let
+        (socket, socketCmds) = Phoenix.Socket.update socketMsg model.socket
       in
         ( { model | socket = socket }
         , Cmd.map SocketMsg socketCmds
@@ -97,9 +97,10 @@ update message model =
       let
         (users, presences, cmds) =
           Presence.State.updatePresenceState model.presences json
+        loopCmds = List.map2 Helpers.tagLoopCmds (Dict.values users) cmds
       in
         ( { model | users = users, presences = presences }
-        , Cmd.map LoopMsg cmds
+        , Cmd.batch loopCmds
         )
 
     PresenceDiffMsg json ->

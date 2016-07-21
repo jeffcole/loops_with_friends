@@ -16,16 +16,17 @@ import Phoenix.Presence exposing
   , presenceStateDecoder
   )
 
-import Presence.Types exposing (..)
 import Loop.State
 import Loop.Types
 import User.Types
+
+import Presence.Types exposing (..)
 
 
 updatePresenceState
   :  PresenceState UserPresence
   -> Json.Encode.Value
-  -> (User.Types.Collection, PresenceState UserPresence, Cmd Loop.Types.Msg)
+  -> (User.Types.Collection, PresenceState UserPresence, List (Cmd Loop.Types.Msg))
 updatePresenceState presences json =
   case decodePresenceState json of
     Ok presenceState ->
@@ -38,9 +39,11 @@ updatePresenceState presences json =
       let
         _ = Debug.log "Error" error
       in
-        (Dict.empty, presences, Cmd.none)
+        (Dict.empty, presences, [Cmd.none])
 
 
+-- TODO Init loops from presence diffs
+-- (currently only bubbling up cmds from presence states)
 updatePresenceDiff
   :  PresenceState UserPresence
   -> Json.Encode.Value
@@ -92,7 +95,7 @@ syncDiff presences presenceDiff =
 
 presenceStateToUsersAndCmds
   :  PresenceState UserPresence
-  -> (User.Types.Collection, Cmd Loop.Types.Msg)
+  -> (User.Types.Collection, List (Cmd Loop.Types.Msg))
 presenceStateToUsersAndCmds presenceState =
   let
     (userAssociations, cmds) =
@@ -104,7 +107,7 @@ presenceStateToUsersAndCmds presenceState =
       |> List.unzip
     users = Dict.fromList userAssociations
   in
-    (users, Cmd.batch cmds)
+    (users, cmds)
 
 
 presenceStateToUsers
@@ -136,7 +139,7 @@ toUserAssociationAndCmds
 toUserAssociationAndCmds userPresence =
   let
     (loop, loopCmds) = Loop.State.initialState userPresence.loopName
-    user = User.Types.Model userPresence.userId userPresence.loopName loop
+    user = User.Types.Model userPresence.userId loop
     userAssociation = (user.id, user)
   in
     (userAssociation, loopCmds)
@@ -146,7 +149,7 @@ toUserAssociation : UserPresence -> (User.Types.ID, User.Types.Model)
 toUserAssociation userPresence =
   let
     (loop, loopCmds) = Loop.State.initialState userPresence.loopName
-    user = User.Types.Model userPresence.userId userPresence.loopName loop
+    user = User.Types.Model userPresence.userId loop
   in
     (user.id, user)
 

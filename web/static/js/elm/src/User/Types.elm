@@ -10,15 +10,9 @@ type alias ID = String
 
 type alias Model =
   { id : ID
-  , loopName : String
   , loop : Loop.Types.Model
   }
 
 
 type alias Collection =
   Dict ID Model
-
-
-type Msg 
-  = Played
-  | Stopped
