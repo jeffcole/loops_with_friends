@@ -16,3 +16,9 @@ type alias Model =
 
 type alias Collection =
   Dict ID Model
+
+
+type alias LoopCmd =
+  { userId : ID
+  , cmds : Cmd Loop.Types.Msg
+  }

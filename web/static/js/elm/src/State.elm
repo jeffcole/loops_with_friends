@@ -22,7 +22,7 @@ initialState flags =
     (socket, socketCmds) = Socket.joinChannel flags.host
   in
     ( { userId = ""
-      , users = Dict.empty
+      , users = User.State.emptyCollection
       , socket = socket
       , presences = Dict.empty
       }
@@ -71,8 +71,7 @@ update msg model =
     LoopMsg userId loopMsg ->
       let
         user = Helpers.getUser userId model.users
-        -- TODO Forward the message to the user and return
-        -- (user, cmds, outMsg)
+        -- TODO Forward the message to the user and return (user, cmds, outMsg)
         (loop, loopCmds, outMsg) = Loop.State.update loopMsg user.loop
         newUser = { user | loop = loop }
         newUsers = Helpers.updateUser newUser model.users
@@ -97,18 +96,19 @@ update msg model =
       let
         (users, presences, cmds) =
           Presence.State.updatePresenceState model.presences json
-        loopCmds = List.map2 Helpers.tagLoopCmds (Dict.values users) cmds
       in
         ( { model | users = users, presences = presences }
-        , Cmd.batch loopCmds
+        , Cmd.batch (List.map Helpers.tagLoopCmds cmds)
         )
 
     PresenceDiffMsg json ->
       let
-        (users, presences) =
-           Presence.State.updatePresenceDiff model.presences json
+        (users, presences, cmds) =
+          Presence.State.updatePresenceDiff model.users model.presences json
       in
-        { model | users = users, presences = presences } ! []
+        ( { model | users = users, presences = presences }
+        , Cmd.batch (List.map Helpers.tagLoopCmds cmds)
+        )
 
 
 subscriptions : Model -> Sub Msg

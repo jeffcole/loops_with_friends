@@ -1,7 +1,7 @@
 module Helpers exposing (..)
 
 
-import Dict
+import Dict exposing (Dict)
 
 import Types exposing (..)
 
@@ -32,7 +32,7 @@ playerLoopState model =
 getUser : User.Types.ID -> User.Types.Collection -> User.Types.Model
 getUser userId users =
   Dict.get userId users
-  |> Maybe.withDefault User.State.empty
+  |> Maybe.withDefault User.State.emptyUser
 
 
 otherUsers : Model -> User.Types.Collection
@@ -48,6 +48,12 @@ updateUser user users =
   |> Dict.insert user.id user
 
 
-tagLoopCmds : User.Types.Model -> Cmd Loop.Types.Msg -> Cmd Msg
-tagLoopCmds user cmds =
-  Cmd.map (LoopMsg user.id) cmds
+tagLoopCmds : User.Types.LoopCmd -> Cmd Msg
+tagLoopCmds cmd =
+  Cmd.map (LoopMsg cmd.userId) cmd.cmds
+
+
+identityDict : (a -> comparable) -> List a -> Dict comparable a
+identityDict idFunction list =
+  List.map (\item -> (idFunction item, item)) list
+  |> Dict.fromList

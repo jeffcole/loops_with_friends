@@ -16,8 +16,11 @@ import Phoenix.Presence exposing
   , presenceStateDecoder
   )
 
+import Helpers
+
 import Loop.State
 import Loop.Types
+import User.State
 import User.Types
 
 import Presence.Types exposing (..)
@@ -26,41 +29,44 @@ import Presence.Types exposing (..)
 updatePresenceState
   :  PresenceState UserPresence
   -> Json.Encode.Value
-  -> (User.Types.Collection, PresenceState UserPresence, List (Cmd Loop.Types.Msg))
+  -> (User.Types.Collection, PresenceState UserPresence, List User.Types.LoopCmd)
 updatePresenceState presences json =
   case decodePresenceState json of
     Ok presenceState ->
       let
         newPresenceState = syncState presences presenceState
-        (users, cmds) = presenceStateToUsersAndCmds newPresenceState
+        (users, cmds) =
+          presenceStateToUserPresences newPresenceState
+          |> usersAndCmds User.State.emptyCollection
       in
         (users, newPresenceState, cmds)
     Err error ->
       let
         _ = Debug.log "Error" error
       in
-        (Dict.empty, presences, [Cmd.none])
+        (User.State.emptyCollection, presences, [User.State.emptyLoopCmd])
 
 
--- TODO Init loops from presence diffs
--- (currently only bubbling up cmds from presence states)
 updatePresenceDiff
-  :  PresenceState UserPresence
+  :  User.Types.Collection
+  -> PresenceState UserPresence
   -> Json.Encode.Value
-  -> (User.Types.Collection, PresenceState UserPresence)
-updatePresenceDiff presences json =
+  -> (User.Types.Collection, PresenceState UserPresence, List User.Types.LoopCmd)
+updatePresenceDiff users presences json =
   case decodePresenceDiff json of
     Ok presenceDiff ->
       let
         newPresenceState = syncDiff presences presenceDiff
-        users = presenceStateToUsers newPresenceState
+        (users, cmds) =
+          presenceStateToUserPresences newPresenceState
+          |> usersAndCmds users
       in
-        (users, newPresenceState)
+        (users, newPresenceState, cmds)
     Err error ->
       let
         _ = Debug.log "Error" error
       in
-        (Dict.empty, presences)
+        (User.State.emptyCollection, presences, [User.State.emptyLoopCmd])
 
 
 decodePresenceState
@@ -93,32 +99,42 @@ syncDiff presences presenceDiff =
   |> Phoenix.Presence.syncDiff presenceDiff
 
 
-presenceStateToUsersAndCmds
-  :  PresenceState UserPresence
-  -> (User.Types.Collection, List (Cmd Loop.Types.Msg))
-presenceStateToUsersAndCmds presenceState =
-  let
-    (userAssociations, cmds) =
-      presenceState
-      |> Phoenix.Presence.list mostRecent
-      |> List.filterMap identity
-      |> List.map toUserPresence
-      |> List.map toUserAssociationAndCmds
-      |> List.unzip
-    users = Dict.fromList userAssociations
-  in
-    (users, cmds)
-
-
-presenceStateToUsers
-  : PresenceState UserPresence -> User.Types.Collection
-presenceStateToUsers presenceState =
+presenceStateToUserPresences : PresenceState UserPresence -> List UserPresence
+presenceStateToUserPresences presenceState =
   presenceState
   |> Phoenix.Presence.list mostRecent
   |> List.filterMap identity
   |> List.map toUserPresence
-  |> List.map toUserAssociation
-  |> Dict.fromList
+
+
+usersAndCmds
+  :  User.Types.Collection
+  -> List UserPresence
+  -> (User.Types.Collection, List User.Types.LoopCmd)
+usersAndCmds users userPresences =
+  let
+    existingUsersAndCmds =
+      Dict.filter (presenceIn userPresences) users
+      |> Dict.values
+      |> List.map (\user -> (user, User.Types.LoopCmd user.id Cmd.none))
+    newUsersAndCmds =
+      List.filter (presenceNotIn users) userPresences
+      |> List.map toUserAndCmds
+    (updatedUsers, cmds) =
+      List.append existingUsersAndCmds newUsersAndCmds
+      |> List.unzip
+  in
+    (Helpers.identityDict .id updatedUsers, cmds)
+
+
+presenceIn : List UserPresence -> User.Types.ID -> User.Types.Model -> Bool
+presenceIn userPresences userId user =
+  List.any (\presence -> presence.userId == userId) userPresences
+
+
+presenceNotIn : User.Types.Collection -> UserPresence -> Bool
+presenceNotIn users presence =
+  not (Dict.member presence.userId users)
 
 
 mostRecent
@@ -134,24 +150,14 @@ toUserPresence value =
   value.payload
 
 
-toUserAssociationAndCmds
-  : UserPresence -> ((User.Types.ID, User.Types.Model), Cmd Loop.Types.Msg)
-toUserAssociationAndCmds userPresence =
-  let
-    (loop, loopCmds) = Loop.State.initialState userPresence.loopName
-    user = User.Types.Model userPresence.userId loop
-    userAssociation = (user.id, user)
-  in
-    (userAssociation, loopCmds)
-
-
-toUserAssociation : UserPresence -> (User.Types.ID, User.Types.Model)
-toUserAssociation userPresence =
+toUserAndCmds
+  : UserPresence -> (User.Types.Model, User.Types.LoopCmd)
+toUserAndCmds userPresence =
   let
     (loop, loopCmds) = Loop.State.initialState userPresence.loopName
     user = User.Types.Model userPresence.userId loop
   in
-    (user.id, user)
+    (user, User.Types.LoopCmd user.id loopCmds)
 
 
 userPresenceDecoder : JD.Decoder UserPresence
