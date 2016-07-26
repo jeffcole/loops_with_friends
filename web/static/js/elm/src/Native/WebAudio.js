@@ -2,9 +2,22 @@ var _jeffcole$loops$Native_WebAudio = function() {
 
 
   var Task = _elm_lang$core$Native_Scheduler;
+  
 
-  AudioContext = AudioContext || webkitAudioContext;
+  window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var context = new AudioContext();
+
+  // TODO Add initial user interaction so that this can unlock the context
+  // on mobile devices.
+  window.addEventListener('touchend', function() {
+  	var buffer = context.createBuffer(1, 1, 22050);
+  	var source = context.createBufferSource();
+  	source.buffer = buffer;
+
+  	source.connect(context.destination);
+  	source.noteOn(0);
+
+  }, false);
 
 
   function loadSound(sourcePath) {
