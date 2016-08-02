@@ -5,7 +5,6 @@ import Json.Encode as JE
 import Phoenix.Presence exposing (PresenceState)
 import Phoenix.Socket
 
-import Loop.Types
 import Presence.Types
 import User.Types
 
@@ -22,7 +21,7 @@ type Msg
   = SetUserId String
   | Play
   | Stop
-  | LoopMsg User.Types.ID Loop.Types.Msg
+  | UserMsg User.Types.ID User.Types.Msg
   | UserPlayed JE.Value
   | UserStopped JE.Value
   | SocketMsg (Phoenix.Socket.Msg Msg)

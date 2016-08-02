@@ -1,4 +1,4 @@
-module Socket exposing (joinChannel, pushLoopMsg, decodeUserId)
+module Socket exposing (joinChannel, pushUserMsg, decodeUserId)
 
 
 import Json.Decode as JD exposing ((:=))
@@ -19,12 +19,12 @@ joinChannel host =
   Phoenix.Socket.join channel (initialSocket host)
 
 
-pushLoopMsg
+pushUserMsg
   :  Loop.Types.OutMsg
   -> User.Types.ID
   -> Phoenix.Socket.Socket msg
   -> (Phoenix.Socket.Socket msg, Cmd (Phoenix.Socket.Msg msg))
-pushLoopMsg msg userId socket =
+pushUserMsg msg userId socket =
   case msg of
     Loop.Types.Played ->
       Phoenix.Socket.push (push userId "played") socket

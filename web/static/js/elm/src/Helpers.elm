@@ -48,9 +48,9 @@ updateUser user users =
   |> Dict.insert user.id user
 
 
-tagLoopCmds : User.Types.LoopCmd -> Cmd Msg
-tagLoopCmds cmd =
-  Cmd.map (LoopMsg cmd.userId) cmd.cmds
+tagUserCmds : User.Types.LoopCmd -> Cmd Msg
+tagUserCmds cmd =
+  Cmd.map (UserMsg cmd.userId) cmd.cmds
 
 
 identityDict : (a -> comparable) -> List a -> Dict comparable a

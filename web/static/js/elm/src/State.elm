@@ -6,7 +6,6 @@ import Phoenix.Channel
 import Phoenix.Push
 import Phoenix.Socket
 
-import Loop.State
 import Presence.State
 import User.State
 import User.Types
@@ -40,13 +39,13 @@ update msg model =
       let
         cmds = Helpers.playerUser model |> User.State.playLoop
       in
-        (model, Cmd.map (LoopMsg model.userId) cmds)
+        (model, Cmd.map (UserMsg model.userId) cmds)
 
     Stop ->
       let
         cmds = Helpers.playerUser model |> User.State.stopLoop
       in
-        (model, Cmd.map (LoopMsg model.userId) cmds)
+        (model, Cmd.map (UserMsg model.userId) cmds)
 
     UserPlayed json ->
       let
@@ -55,7 +54,7 @@ update msg model =
         loopCmds = User.State.playLoop user
       in
         ( model
-        , Cmd.map (LoopMsg userId) loopCmds
+        , Cmd.map (UserMsg userId) loopCmds
         )
 
     UserStopped json ->
@@ -65,21 +64,19 @@ update msg model =
         loopCmds = User.State.stopLoop user
       in
         ( model
-        , Cmd.map (LoopMsg userId) loopCmds
+        , Cmd.map (UserMsg userId) loopCmds
         )
 
-    LoopMsg userId loopMsg ->
+    UserMsg userId userMsg ->
       let
         user = Helpers.getUser userId model.users
-        -- TODO Forward the message to the user and return (user, cmds, outMsg)
-        (loop, loopCmds, outMsg) = Loop.State.update loopMsg user.loop
-        newUser = { user | loop = loop }
+        (newUser, userCmds, outMsg) = User.State.update userMsg user
         newUsers = Helpers.updateUser newUser model.users
-        (socket, socketCmds) = Socket.pushLoopMsg outMsg userId model.socket
+        (socket, socketCmds) = Socket.pushUserMsg outMsg userId model.socket
       in
         ( { model | users = newUsers, socket = socket }
         , Cmd.batch
-            [ Cmd.map (LoopMsg userId) loopCmds
+            [ Cmd.map (UserMsg userId) userCmds
             , Cmd.map SocketMsg socketCmds
             ]
         )
@@ -98,7 +95,7 @@ update msg model =
           Presence.State.updatePresenceState model.presences json
       in
         ( { model | users = users, presences = presences }
-        , Cmd.batch (List.map Helpers.tagLoopCmds cmds)
+        , Cmd.batch (List.map Helpers.tagUserCmds cmds)
         )
 
     PresenceDiffMsg json ->
@@ -107,7 +104,7 @@ update msg model =
           Presence.State.updatePresenceDiff model.users model.presences json
       in
         ( { model | users = users, presences = presences }
-        , Cmd.batch (List.map Helpers.tagLoopCmds cmds)
+        , Cmd.batch (List.map Helpers.tagUserCmds cmds)
         )
 
 

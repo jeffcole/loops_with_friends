@@ -4,6 +4,7 @@ module User.State exposing
   , emptyLoopCmd
   , playLoop
   , stopLoop
+  , update
   )
 
 
@@ -33,11 +34,22 @@ emptyLoopCmd =
   LoopCmd "Empty User" Cmd.none
 
 
-playLoop : Model -> Cmd Loop.Types.Msg
+playLoop : Model -> Cmd Msg
 playLoop user =
   Loop.State.play user.loop
 
 
-stopLoop : Model -> Cmd Loop.Types.Msg
+stopLoop : Model -> Cmd Msg
 stopLoop user =
   Loop.State.stop user.loop
+
+
+update : Msg -> Model -> (Model, Cmd Msg, Loop.Types.OutMsg)
+update msg model =
+  let
+    (loop, loopCmds, outMsg) = Loop.State.update msg model.loop
+  in
+    ( { model | loop = loop }
+    , loopCmds
+    , outMsg
+    )

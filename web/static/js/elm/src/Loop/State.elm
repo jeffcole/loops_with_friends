@@ -19,6 +19,7 @@ initialState name =
   )
 
 
+-- TODO Remove cmds because this never returns any
 update : Msg -> Model -> (Model, Cmd Msg, OutMsg)
 update msg model =
   case msg of
