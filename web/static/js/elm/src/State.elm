@@ -1,12 +1,13 @@
 module State exposing (initialState, update, subscriptions)
 
 import Debug
-import Dict exposing (Dict)
+import Dict
 import Phoenix.Channel
 import Phoenix.Push
 import Phoenix.Socket
 
 import Presence.State
+import User.Helpers
 import User.State
 import User.Types
 
@@ -50,7 +51,7 @@ update msg model =
     UserPlayed json ->
       let
         userId = Socket.decodeUserId json
-        user = Helpers.getUser userId model.users
+        user = User.Helpers.getUser userId model.users
         loopCmds = User.State.playLoop user
       in
         ( model
@@ -60,7 +61,7 @@ update msg model =
     UserStopped json ->
       let
         userId = Socket.decodeUserId json
-        user = Helpers.getUser userId model.users
+        user = User.Helpers.getUser userId model.users
         loopCmds = User.State.stopLoop user
       in
         ( model
@@ -69,9 +70,9 @@ update msg model =
 
     UserMsg userId userMsg ->
       let
-        user = Helpers.getUser userId model.users
+        user = User.Helpers.getUser userId model.users
         (newUser, userCmds, outMsg) = User.State.update userMsg user
-        newUsers = Helpers.updateUser newUser model.users
+        newUsers = User.Helpers.replace newUser model.users
         (socket, socketCmds) = Socket.pushUserMsg outMsg userId model.socket
       in
         ( { model | users = newUsers, socket = socket }

@@ -2,7 +2,7 @@ module Presence.State exposing (updatePresenceState, updatePresenceDiff)
 
 
 import Debug
-import Dict exposing (Dict)
+import Dict
 import Json.Encode
 import Json.Decode as JD exposing ((:=))
 import Json.Decode.Pipeline as JDP
@@ -16,13 +16,11 @@ import Phoenix.Presence exposing
   , presenceStateDecoder
   )
 
-import Helpers
-
 import Loop.State
-import Loop.Types
 import User.State
 import User.Types
 
+import Presence.Helpers
 import Presence.Types exposing (..)
 
 
@@ -124,7 +122,7 @@ usersAndCmds users userPresences =
       List.append existingUsersAndCmds newUsersAndCmds
       |> List.unzip
   in
-    (Helpers.identityDict .id updatedUsers, cmds)
+    (Presence.Helpers.identityDict .id updatedUsers, cmds)
 
 
 presenceIn : List UserPresence -> User.Types.ID -> User.Types.Model -> Bool
