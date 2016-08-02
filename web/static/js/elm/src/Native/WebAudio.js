@@ -2,7 +2,7 @@ var _jeffcole$loops$Native_WebAudio = function() {
 
 
   var Task = _elm_lang$core$Native_Scheduler;
-  
+
 
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var context = new AudioContext();
@@ -61,9 +61,13 @@ var _jeffcole$loops$Native_WebAudio = function() {
       // new one with each call to `playSound`.
       // https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode
       var bufferSource = context.createBufferSource();
-
       bufferSource.buffer = sound.bufferSource.buffer;
-      bufferSource.connect(context.destination);
+
+      var gainNode = context.createGain();
+      bufferSource.connect(gainNode);
+      gainNode.connect(context.destination);
+      gainNode.gain.value = 0.05;
+
       bufferSource.loop = true;
       bufferSource.start(0);
 
