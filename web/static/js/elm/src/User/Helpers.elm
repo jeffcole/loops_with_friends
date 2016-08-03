@@ -3,7 +3,9 @@ module User.Helpers exposing (..)
 
 import Dict
 
+import Loop.Helpers
 import Loop.Types
+
 import User.State
 import User.Types exposing (..)
 
@@ -29,3 +31,10 @@ replace user users =
   users
   |> Dict.remove user.id
   |> Dict.insert user.id user
+
+
+anyLoopsPlaying : Collection -> Bool
+anyLoopsPlaying collection =
+  Dict.values collection
+  |> List.map .loop
+  |> List.any Loop.Helpers.isPlaying

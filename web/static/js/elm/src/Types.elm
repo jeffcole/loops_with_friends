@@ -4,6 +4,7 @@ module Types exposing (..)
 import Json.Encode as JE
 import Phoenix.Presence exposing (PresenceState)
 import Phoenix.Socket
+import Time exposing (Time)
 
 import Presence.Types
 import User.Types
@@ -21,6 +22,7 @@ type Msg
   = SetUserId String
   | Play
   | Stop
+  | MeasureStart Time
   | UserMsg User.Types.ID User.Types.Msg
   | UserPlayed JE.Value
   | UserStopped JE.Value

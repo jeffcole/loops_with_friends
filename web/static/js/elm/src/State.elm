@@ -5,6 +5,7 @@ import Dict
 import Phoenix.Channel
 import Phoenix.Push
 import Phoenix.Socket
+import Time
 
 import Presence.State
 import User.Helpers
@@ -82,6 +83,12 @@ update msg model =
             ]
         )
 
+    MeasureStart time ->
+      let
+        _ = Debug.log "MeasureStart" time
+      in
+        (model, Cmd.none)
+
     SocketMsg socketMsg ->
       let
         (socket, socketCmds) = Phoenix.Socket.update socketMsg model.socket
@@ -111,4 +118,13 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Phoenix.Socket.listen model.socket SocketMsg
+  Sub.batch
+    [ measureSubscriptions model
+    , Phoenix.Socket.listen model.socket SocketMsg
+    ]
+
+measureSubscriptions : Model -> Sub Msg
+measureSubscriptions model =
+  if User.Helpers.anyLoopsPlaying model.users
+    then Time.every (4.799625 * Time.second) MeasureStart
+    else Sub.none
