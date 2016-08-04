@@ -17,8 +17,9 @@ type Sound
 
 
 type State
-  = Playing
-  | NotPlaying
+  = NotPlaying
+  | Queued
+  | Playing
 
 
 type Msg

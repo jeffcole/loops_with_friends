@@ -23,15 +23,22 @@ root user =
 playerButton : Loop.Types.State -> Html Msg
 playerButton state =
   case state of
-    Loop.Types.Playing ->
-      stopButton
     Loop.Types.NotPlaying ->
       playButton
+    Loop.Types.Queued ->
+      queuedMessage
+    Loop.Types.Playing ->
+      stopButton
 
 
 playButton : Html Msg
 playButton =
   button [ onClick Play ] [ text "Play" ]
+
+
+queuedMessage : Html Msg
+queuedMessage =
+  text "Coming up!"
 
 
 stopButton : Html Msg

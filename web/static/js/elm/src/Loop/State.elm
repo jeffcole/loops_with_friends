@@ -1,4 +1,4 @@
-module Loop.State exposing (initialState, update, play, stop)
+module Loop.State exposing (initialState, update, queue, play, stop)
 
 
 import Task exposing (Task)
@@ -51,13 +51,28 @@ update msg model =
       (model, Cmd.none, NoMsg)
 
 
+queue : Model -> (Model, Cmd Msg)
+queue model =
+  let
+    state = 
+      case model.state of
+        Playing ->
+          Playing
+        _ ->
+          Queued
+  in
+    ( { model | state = state }
+    , Cmd.none
+    )
+
+
 play : Model -> Cmd Msg
 play model =
   case model.state of
-    Playing ->
-      Cmd.none
     NotPlaying ->
       performPlay model.sound
+    _ ->
+      Cmd.none
 
 
 stop : Model -> Cmd Msg
@@ -65,7 +80,7 @@ stop model =
   case model.state of
     Playing ->
       performStop model.sound
-    NotPlaying ->
+    _ ->
       Cmd.none
 
 

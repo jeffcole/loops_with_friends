@@ -39,13 +39,20 @@ update msg model =
 
     Play ->
       let
-        cmds = Helpers.playerUser model |> User.State.playLoop
+        playerUser = Helpers.playerUser model
+        (user, cmds) =
+          if User.Helpers.anyLoopsPlaying model.users
+            then User.State.queueLoop playerUser
+            else User.State.playLoop playerUser
+        users = User.Helpers.replace user model.users
       in
-        (model, Cmd.map (UserMsg model.userId) cmds)
+        ( { model | users = users }
+        , Cmd.map (UserMsg model.userId) cmds
+        )
 
     Stop ->
       let
-        cmds = Helpers.playerUser model |> User.State.stopLoop
+        (_, cmds) = Helpers.playerUser model |> User.State.stopLoop
       in
         (model, Cmd.map (UserMsg model.userId) cmds)
 
@@ -53,20 +60,20 @@ update msg model =
       let
         userId = Socket.decodeUserId json
         user = User.Helpers.getUser userId model.users
-        loopCmds = User.State.playLoop user
+        (_, cmds) = User.State.queueLoop user
       in
         ( model
-        , Cmd.map (UserMsg userId) loopCmds
+        , Cmd.map (UserMsg userId) cmds
         )
 
     UserStopped json ->
       let
         userId = Socket.decodeUserId json
         user = User.Helpers.getUser userId model.users
-        loopCmds = User.State.stopLoop user
+        (_, cmds) = User.State.stopLoop user
       in
         ( model
-        , Cmd.map (UserMsg userId) loopCmds
+        , Cmd.map (UserMsg userId) cmds
         )
 
     UserMsg userId userMsg ->

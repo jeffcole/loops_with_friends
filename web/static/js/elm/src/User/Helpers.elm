@@ -37,4 +37,4 @@ anyLoopsPlaying : Collection -> Bool
 anyLoopsPlaying collection =
   Dict.values collection
   |> List.map .loop
-  |> List.any Loop.Helpers.isPlaying
+  |> List.any Loop.Helpers.isPlayingOrQueued

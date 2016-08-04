@@ -3,6 +3,7 @@ module User.State exposing
   , emptyUser
   , emptyLoopCmd
   , playLoop
+  , queueLoop
   , stopLoop
   , update
   )
@@ -34,14 +35,28 @@ emptyLoopCmd =
   LoopCmd "Empty User" Cmd.none
 
 
-playLoop : Model -> Cmd Msg
-playLoop user =
-  Loop.State.play user.loop
+playLoop : Model -> (Model, Cmd Msg)
+playLoop model =
+  ( model
+  , Loop.State.play model.loop
+  )
 
 
-stopLoop : Model -> Cmd Msg
-stopLoop user =
-  Loop.State.stop user.loop
+queueLoop : Model -> (Model, Cmd Msg)
+queueLoop model =
+  let
+    (loop, cmds) = Loop.State.queue model.loop
+  in
+    ( { model | loop = loop }
+    , cmds
+    )
+
+
+stopLoop : Model -> (Model, Cmd Msg)
+stopLoop model =
+  ( model
+  , Loop.State.stop model.loop
+  )
 
 
 update : Msg -> Model -> (Model, Cmd Msg, Loop.Types.OutMsg)
