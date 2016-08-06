@@ -1,4 +1,4 @@
-module Presence.Helpers exposing (..)
+module Lib.Helpers exposing (..)
 
 
 import Dict exposing (Dict)

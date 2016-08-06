@@ -2,6 +2,8 @@ module User.Types exposing (..)
 
 
 import Dict exposing (Dict)
+
+import Loop.State
 import Loop.Types
 
 
@@ -25,3 +27,19 @@ type alias LoopCmd =
   { userId : ID
   , cmds : Cmd Loop.Types.Msg
   }
+
+
+emptyCollection : Collection
+emptyCollection =
+  Dict.empty
+
+
+emptyModel : Model
+emptyModel =
+  Loop.Types.initialModel "Empty Loop"
+  |> Model "Empty User"
+
+
+emptyLoopCmd : LoopCmd
+emptyLoopCmd =
+  LoopCmd "Empty User" Cmd.none

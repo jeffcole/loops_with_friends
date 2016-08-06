@@ -35,3 +35,11 @@ type OutMsg
   = Played
   | Stopped
   | NoMsg
+
+
+initialModel : String -> Model
+initialModel name =
+  { name = name
+  , sound = NotLoaded
+  , state = NotPlaying
+  }

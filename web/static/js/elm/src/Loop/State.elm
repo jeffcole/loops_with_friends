@@ -10,12 +10,8 @@ import Loop.Types exposing (..)
 
 initialState : String -> (Model, Cmd Msg)
 initialState name =
-  ( { name = name
-    , sound = NotLoaded
-    , state = NotPlaying
-    }
-  ,
-    performLoad name
+  ( initialModel name
+  , performLoad name
   )
 
 
@@ -54,7 +50,7 @@ update msg model =
 queue : Model -> (Model, Cmd Msg)
 queue model =
   let
-    state = 
+    state =
       case model.state of
         Playing ->
           Playing
@@ -69,10 +65,10 @@ queue model =
 play : Model -> Cmd Msg
 play model =
   case model.state of
-    NotPlaying ->
-      performPlay model.sound
-    _ ->
+    Playing ->
       Cmd.none
+    _ ->
+      performPlay model.sound
 
 
 stop : Model -> Cmd Msg

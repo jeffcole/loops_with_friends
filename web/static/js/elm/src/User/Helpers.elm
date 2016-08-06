@@ -6,14 +6,13 @@ import Dict
 import Loop.Helpers
 import Loop.Types
 
-import User.State
 import User.Types exposing (..)
 
 
 getUser : ID -> Collection -> Model
 getUser id collection =
   Dict.get id collection
-  |> Maybe.withDefault User.State.emptyUser
+  |> Maybe.withDefault emptyModel
 
 
 loopName : Model -> String
@@ -38,3 +37,8 @@ anyLoopsPlaying collection =
   Dict.values collection
   |> List.map .loop
   |> List.any Loop.Helpers.isPlayingOrQueued
+
+
+hasQueuedLoop : Model -> Bool
+hasQueuedLoop model =
+  Loop.Helpers.isQueued model.loop

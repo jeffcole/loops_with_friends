@@ -10,3 +10,10 @@ isPlayingOrQueued model =
     Playing -> True
     Queued -> True
     NotPlaying -> False
+
+
+isQueued : Model -> Bool
+isQueued model =
+  case model.state of
+    Queued -> True
+    _ -> False

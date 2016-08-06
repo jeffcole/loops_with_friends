@@ -16,11 +16,11 @@ import Phoenix.Presence exposing
   , presenceStateDecoder
   )
 
+import Lib.Helpers
 import Loop.State
 import User.State
 import User.Types
 
-import Presence.Helpers
 import Presence.Types exposing (..)
 
 
@@ -35,14 +35,14 @@ updatePresenceState presences json =
         newPresenceState = syncState presences presenceState
         (users, cmds) =
           presenceStateToUserPresences newPresenceState
-          |> usersAndCmds User.State.emptyCollection
+          |> usersAndCmds User.Types.emptyCollection
       in
         (users, newPresenceState, cmds)
     Err error ->
       let
         _ = Debug.log "Error" error
       in
-        (User.State.emptyCollection, presences, [User.State.emptyLoopCmd])
+        (User.Types.emptyCollection, presences, [User.Types.emptyLoopCmd])
 
 
 updatePresenceDiff
@@ -64,7 +64,7 @@ updatePresenceDiff users presences json =
       let
         _ = Debug.log "Error" error
       in
-        (User.State.emptyCollection, presences, [User.State.emptyLoopCmd])
+        (User.Types.emptyCollection, presences, [User.Types.emptyLoopCmd])
 
 
 decodePresenceState
@@ -122,7 +122,7 @@ usersAndCmds users userPresences =
       List.append existingUsersAndCmds newUsersAndCmds
       |> List.unzip
   in
-    (Presence.Helpers.identityDict .id updatedUsers, cmds)
+    (Lib.Helpers.identityDict .id updatedUsers, cmds)
 
 
 presenceIn : List UserPresence -> User.Types.ID -> User.Types.Model -> Bool

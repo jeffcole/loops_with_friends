@@ -1,8 +1,6 @@
 module User.State exposing
-  ( emptyCollection
-  , emptyUser
-  , emptyLoopCmd
-  , playLoop
+  ( playLoop
+  , playQueuedLoops
   , queueLoop
   , stopLoop
   , update
@@ -11,28 +9,12 @@ module User.State exposing
 
 import Dict
 
+import Lib.Helpers
 import Loop.State
 import Loop.Types
 
+import User.Helpers
 import User.Types exposing (..)
-
-
-emptyCollection : Collection
-emptyCollection =
-  Dict.empty
-
-
-emptyUser : Model
-emptyUser =
-  let
-    (loop, loopCmds) = Loop.State.initialState "Empty Loop"
-  in
-    Model "Empty User" loop
-
-
-emptyLoopCmd : LoopCmd
-emptyLoopCmd =
-  LoopCmd "Empty User" Cmd.none
 
 
 playLoop : Model -> (Model, Cmd Msg)
@@ -40,6 +22,31 @@ playLoop model =
   ( model
   , Loop.State.play model.loop
   )
+
+playQueuedLoops : Collection -> (Collection, List LoopCmd)
+playQueuedLoops collection =
+  let
+    (users, cmds) =
+      collection
+      |> Dict.values
+      |> List.filter User.Helpers.hasQueuedLoop
+      |> List.map usersAndPlayCmds
+      |> List.unzip
+    playingUsers = Lib.Helpers.identityDict .id users
+  in
+    ( Dict.union playingUsers collection
+    , cmds
+    )
+
+
+usersAndPlayCmds : Model -> (Model, LoopCmd)
+usersAndPlayCmds model =
+  let
+    (newModel, cmds) = playLoop model
+  in
+    ( model
+    , LoopCmd newModel.id cmds
+    )
 
 
 queueLoop : Model -> (Model, Cmd Msg)

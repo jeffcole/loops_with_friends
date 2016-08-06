@@ -23,7 +23,7 @@ initialState flags =
     (socket, socketCmds) = Socket.joinChannel flags.host
   in
     ( { userId = ""
-      , users = User.State.emptyCollection
+      , users = User.Types.emptyCollection
       , socket = socket
       , presences = Dict.empty
       }
@@ -60,9 +60,10 @@ update msg model =
       let
         userId = Socket.decodeUserId json
         user = User.Helpers.getUser userId model.users
-        (_, cmds) = User.State.queueLoop user
+        (newUser, cmds) = User.State.queueLoop user
+        users = User.Helpers.replace newUser model.users
       in
-        ( model
+        ( { model | users = users }
         , Cmd.map (UserMsg userId) cmds
         )
 
@@ -93,8 +94,11 @@ update msg model =
     MeasureStart time ->
       let
         _ = Debug.log "MeasureStart" time
+        (users, cmds) = User.State.playQueuedLoops model.users
       in
-        (model, Cmd.none)
+        ( { model | users = users }
+        , Cmd.batch (List.map Helpers.tagUserCmds cmds)
+        )
 
     SocketMsg socketMsg ->
       let
