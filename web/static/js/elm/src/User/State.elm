@@ -69,9 +69,9 @@ stopLoop model =
 update : Msg -> Model -> (Model, Cmd Msg, Loop.Types.OutMsg)
 update msg model =
   let
-    (loop, loopCmds, outMsg) = Loop.State.update msg model.loop
+    (loop, outMsg) = Loop.State.update msg model.loop
   in
     ( { model | loop = loop }
-    , loopCmds
+    , Cmd.none
     , outMsg
     )

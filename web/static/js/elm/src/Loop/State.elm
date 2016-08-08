@@ -15,36 +15,32 @@ initialState name =
   )
 
 
--- TODO Remove cmds because this never returns any
-update : Msg -> Model -> (Model, Cmd Msg, OutMsg)
+update : Msg -> Model -> (Model, OutMsg)
 update msg model =
   case msg of
     LoadSucceed sound ->
       ( { model | sound = Loaded sound }
-      , Cmd.none
       , NoMsg
       )
 
     LoadFail error ->
-      (model, Cmd.none, NoMsg)
+      (model, NoMsg)
 
     PlaySucceed sound ->
       ( { model | state = Playing, sound = Loaded sound }
-      , Cmd.none
       , Played
       )
 
     PlayFail error ->
-      (model, Cmd.none, NoMsg)
+      (model, NoMsg)
 
     StopSucceed () ->
       ( { model | state = NotPlaying }
-      , Cmd.none
       , Stopped
       )
 
     StopFail never ->
-      (model, Cmd.none, NoMsg)
+      (model, NoMsg)
 
 
 queue : Model -> (Model, Cmd Msg)
