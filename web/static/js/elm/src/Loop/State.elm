@@ -67,13 +67,19 @@ play model =
       performPlay model.sound
 
 
-stop : Model -> Cmd Msg
+stop : Model -> (Model, Cmd Msg)
 stop model =
   case model.state of
     Playing ->
-      performStop model.sound
+      ( model
+      , performStop model.sound
+      )
+    Queued ->
+      ( {model | state = NotPlaying }
+      , Cmd.none
+      )
     _ ->
-      Cmd.none
+      (model, Cmd.none)
 
 
 performLoad : String -> Cmd Msg

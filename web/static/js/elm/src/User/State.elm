@@ -61,9 +61,12 @@ queueLoop model =
 
 stopLoop : Model -> (Model, Cmd Msg)
 stopLoop model =
-  ( model
-  , Loop.State.stop model.loop
-  )
+  let
+    (loop, cmds) = Loop.State.stop model.loop
+  in
+    ( { model | loop = loop }
+    , cmds
+    )
 
 
 update : Msg -> Model -> (Model, Cmd Msg, Loop.Types.OutMsg)

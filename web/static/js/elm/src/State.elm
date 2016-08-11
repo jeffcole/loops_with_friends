@@ -71,9 +71,10 @@ update msg model =
       let
         userId = Socket.decodeUserId json
         user = User.Helpers.getUser userId model.users
-        (_, cmds) = User.State.stopLoop user
+        (newUser, cmds) = User.State.stopLoop user
+        users = User.Helpers.replace newUser model.users
       in
-        ( model
+        ( { model | users = users }
         , Cmd.map (UserMsg userId) cmds
         )
 
