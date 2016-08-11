@@ -12,8 +12,7 @@ defmodule Loops do
       # Start the Ecto repository
       supervisor(Loops.Repo, []),
       supervisor(Loops.Presence, []),
-      # Here you could define other workers and supervisors as children
-      # worker(Loops.Worker, [arg1, arg2, arg3]),
+      worker(Loops.LoopTracker, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
