@@ -88,6 +88,7 @@ socketUrl host =
 
 socketProtocol : String -> String
 socketProtocol host =
-  if host == "localhost:4000"
-    then "ws://"
-    else "wss://"
+  case host of
+    "10.0.0.5:4000" -> "ws://"
+    "localhost:4000" -> "ws://"
+    _ -> "wss://"
