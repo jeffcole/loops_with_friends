@@ -5,12 +5,11 @@ var CopyWebpackPlugin = require("copy-webpack-plugin");
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  entry: {
-    app: [
+  entry: [
+      "./web/static/css/app.scss",
       "./web/static/js/app.js",
       "./web/static/js/elm/src/App.elm"
-    ]
-  },
+  ],
   output: {
     path: "./priv/static",
     filename: "js/app.js"
@@ -32,7 +31,10 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('css!sass')
+        loader: ExtractTextPlugin.extract(
+          'style',
+          'css!sass?includePaths[]=' + __dirname + '/node_modules'
+        )
       }
     ]
   },

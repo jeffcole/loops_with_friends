@@ -1,5 +1,3 @@
-require("../css/app.scss")
-
 // Import local files
 //
 // Local files can be imported directly using relative
