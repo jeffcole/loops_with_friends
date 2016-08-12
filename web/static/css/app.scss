@@ -1,0 +1,9 @@
+@import "../vendor/css/normalize";
+// Bourbon is vendorized until 5.0 is released as an npm package
+@import "../vendor/css/bourbon/bourbon";
+
+@import "base/base";
+
+body {
+  color: $base-font-color;
+}

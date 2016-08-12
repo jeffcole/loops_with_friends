@@ -1,4 +1,4 @@
-require("../css/app.sass")
+require("../css/app.scss")
 
 // Import local files
 //
