@@ -1,12 +1,12 @@
 defmodule Loops.LoopTracker do
   @loops [
-    "80s_Back_Beat_01",
-    "Amsterdam_Layers_02",
+    "80s_Back_Beat",
+    "Amsterdam_Layers",
     "Synthetic_String_Bass",
     "Degenerating_Pitch_Vox",
     "Kyoto_Night_Guitar",
-    "Conga_Groove_11",
-    "African_Rain_Caxixi_01",
+    "Conga_Groove",
+    "African_Rain_Caxixi",
   ]
 
   def start_link do
