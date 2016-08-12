@@ -1,6 +1,7 @@
 const elmMake = __dirname + '/node_modules/.bin/elm-make';
 const elmSource = __dirname + '/web/static/js/elm';
 
+var Autoprefixer = require('autoprefixer');
 var CopyWebpackPlugin = require("copy-webpack-plugin");
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -31,17 +32,21 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract(
-          'style',
-          'css!sass?' +
-            'includePaths[]=' + __dirname + '/node_modules&' +
-            'includePaths[]=' + __dirname + '/web/static/vendor/css'
-        )
+        loader: ExtractTextPlugin.extract('style', ['css', 'postcss', 'sass'])
       }
     ]
   },
   plugins: [
     new CopyWebpackPlugin([{ from: "./web/static/assets" }]),
     new ExtractTextPlugin('css/app.css', { allChunks: true })
-  ]
+  ],
+  postcss: function () {
+    return [Autoprefixer];
+  },
+  sassLoader: {
+    includePaths: [
+      __dirname + "/node_modules",
+      __dirname + '/web/static/vendor/css'
+    ]
+  }
 };
