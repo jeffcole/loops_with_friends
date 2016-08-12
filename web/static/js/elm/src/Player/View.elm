@@ -5,6 +5,7 @@ import Html exposing (..)
 import Html.Events exposing (..)
 
 import Loop.Types
+import Loop.View
 import User.Types
 import User.Helpers
 
@@ -13,10 +14,9 @@ import Types exposing (..)
 
 root : User.Types.Model -> Html Msg
 root user =
-  ul []
-    [ li [] [ text (User.Helpers.loopName user) ]
-    , li [] [ text (toString (User.Helpers.loopState user)) ]
-    , li [] [ playerButton (User.Helpers.loopState user) ]
+  div []
+    [ Loop.View.root user.loop
+    , playerButton (User.Helpers.loopState user)
     ]
 
 

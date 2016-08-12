@@ -15,11 +15,6 @@ getUser id collection =
   |> Maybe.withDefault emptyModel
 
 
-loopName : Model -> String
-loopName model =
-  model.loop.name
-
-
 loopState : Model -> Loop.Types.State
 loopState model =
   model.loop.state
