@@ -33,7 +33,9 @@ module.exports = {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract(
           'style',
-          'css!sass?includePaths[]=' + __dirname + '/node_modules'
+          'css!sass?' +
+            'includePaths[]=' + __dirname + '/node_modules&' +
+            'includePaths[]=' + __dirname + '/web/static/vendor/css'
         )
       }
     ]

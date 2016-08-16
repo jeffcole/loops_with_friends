@@ -1,6 +1,6 @@
-@import "../vendor/css/normalize";
+@import "normalize";
 // Bourbon is vendorized until 5.0 is released as an npm package
-@import "../vendor/css/bourbon/bourbon";
+@import "bourbon/bourbon";
 @import "bourbon-neat/app/assets/stylesheets/neat";
 
 @import "base/base";
