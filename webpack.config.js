@@ -1,6 +1,3 @@
-const elmMake = __dirname + '/node_modules/.bin/elm-make';
-const elmSource = __dirname + '/web/static/elm';
-
 var Autoprefixer = require('autoprefixer');
 var CopyWebpackPlugin = require("copy-webpack-plugin");
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -18,8 +15,8 @@ module.exports = {
     loaders: [
       {
         test: /\.elm$/,
-        exclude: /(node_modules|elm-stuff)/,
-        loader: `elm-webpack?pathToMake=${elmMake}&cwd=${elmSource}`
+        exclude: [/elm-stuff/, /node_modules/],
+        loader: 'elm-webpack'
       },
       {
         test: /\.js$/,
@@ -41,6 +38,10 @@ module.exports = {
   ],
   resolve: {
     modulesDirectories: ["node_modules", __dirname + "/web/static/js"]
+  },
+  elm: {
+    pathToMake: __dirname + '/node_modules/.bin/elm-make',
+    cwd: __dirname + '/web/static/elm'
   },
   postcss: function () {
     return [Autoprefixer];
