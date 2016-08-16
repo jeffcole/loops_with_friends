@@ -1,5 +1,5 @@
 const elmMake = __dirname + '/node_modules/.bin/elm-make';
-const elmSource = __dirname + '/web/static/js/elm';
+const elmSource = __dirname + '/web/static/elm';
 
 var Autoprefixer = require('autoprefixer');
 var CopyWebpackPlugin = require("copy-webpack-plugin");
