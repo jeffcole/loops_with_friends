@@ -32,5 +32,6 @@ usersView : User.Types.Collection -> Html Msg
 usersView users =
   section []
     [ h2 [] [ text "Other Players' Loops" ]
-    , ul [] (Dict.values users |> List.map User.View.root)
+    , ul [ class "grid-items" ]
+        (Dict.values users |> List.map User.View.root)
     ]

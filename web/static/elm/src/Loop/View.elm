@@ -2,6 +2,7 @@ module Loop.View exposing (root)
 
 
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import String
 
 import Loop.Types exposing (..)

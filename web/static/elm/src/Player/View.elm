@@ -2,6 +2,7 @@ module Player.View exposing (root)
 
 
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 import Loop.Types
@@ -16,8 +17,12 @@ root : User.Types.Model -> Html Msg
 root user =
   section []
     [ h2 [] [ text "Your Loop" ]
-    , Loop.View.root user.loop
-    , playerButton (User.Helpers.loopState user)
+    , div [ class "grid-items" ]
+        [ div [ class "grid-item" ]
+            [ Loop.View.root user.loop
+            , playerButton (User.Helpers.loopState user)
+            ]
+        ]
     ]
 
 
@@ -34,14 +39,23 @@ playerButton state =
 
 playButton : Html Msg
 playButton =
-  button [ onClick Play ] [ text "Play" ]
+  button
+    [ onClick Play
+    ]
+    [ text "Play" ]
 
 
 queuedMessage : Html Msg
 queuedMessage =
-  text "Coming up!"
+  span
+    [
+    ]
+    [ text "Coming Up!" ]
 
 
 stopButton : Html Msg
 stopButton =
-  button [ onClick Stop ] [ text "Stop" ]
+  button
+    [ onClick Stop
+    ]
+    [ text "Stop" ]
