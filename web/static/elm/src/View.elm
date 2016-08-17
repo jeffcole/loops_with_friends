@@ -17,13 +17,12 @@ import User.View
 root : Model -> Html Msg
 root model =
   div [ class "container" ]
-      [ section [ class "welcome" ]
-          [ h1 [] [ text "Loops" ]
-          , h2 [] [ text "With Friends" ]
-          ]
-        , Player.View.root (Helpers.playerUser model)
-        , usersView (Helpers.otherUsers model)
-      ]
+    [ section []
+        [ h1 [] [ text "Loops With Friends" ]
+        ]
+    , Player.View.root (Helpers.playerUser model)
+    , usersView (Helpers.otherUsers model)
+    ]
 
 
 usersView : User.Types.Collection -> Html Msg
