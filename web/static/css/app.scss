@@ -1,8 +1,12 @@
 @import "normalize.css/normalize";
+
 // Bourbon is vendorized until 5.0 is released as an npm package
 @import "bourbon/bourbon";
+
+// $visual-grid: true;
 @import "bourbon-neat/app/assets/stylesheets/neat";
-// Bourbon Bitters
+
+// Bourbon Bitters Scaffolding
 @import "base/base";
 
 
@@ -12,4 +16,13 @@ body {
 
 .container {
   @include outer-container;
+}
+
+.content {
+  @include span-columns(10);
+  @include shift(1);
+}
+
+section {
+  margin-bottom: $base-spacing;
 }

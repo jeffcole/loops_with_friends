@@ -14,8 +14,9 @@ import Types exposing (..)
 
 root : User.Types.Model -> Html Msg
 root user =
-  div []
-    [ Loop.View.root user.loop
+  section []
+    [ h2 [] [ text "Your Loop" ]
+    , Loop.View.root user.loop
     , playerButton (User.Helpers.loopState user)
     ]
 

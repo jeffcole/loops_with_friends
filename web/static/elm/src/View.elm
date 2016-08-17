@@ -17,14 +17,20 @@ import User.View
 root : Model -> Html Msg
 root model =
   div [ class "container" ]
-    [ section []
-        [ h1 [] [ text "Loops With Friends" ]
-        ]
-    , Player.View.root (Helpers.playerUser model)
-    , usersView (Helpers.otherUsers model)
+    [ div [ class "content" ]
+       [ header []
+           [ h1 [] [ text "Loops With Friends" ] ]
+       , main' []
+           [ Player.View.root (Helpers.playerUser model)
+           , usersView (Helpers.otherUsers model)
+           ]
+       ]
     ]
 
 
 usersView : User.Types.Collection -> Html Msg
 usersView users =
-  ul [] (Dict.values users |> List.map User.View.root)
+  section []
+    [ h2 [] [ text "Other Players' Loops" ]
+    , ul [] (Dict.values users |> List.map User.View.root)
+    ]
