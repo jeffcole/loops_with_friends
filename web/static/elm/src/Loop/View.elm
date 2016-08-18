@@ -10,9 +10,10 @@ import Loop.Types exposing (..)
 
 root : Model -> Html msg
 root model =
-  ul []
-    [ li [] [ text (humanizedName model.name) ]
-    , li [] [ text (toString model.state) ]
+  div [ class "loop" ]
+    [ span [ class "icon" ] []
+    , span [] [ text (humanizedName model.name) ]
+    , span [] [ text (toString model.state) ]
     ]
 
 

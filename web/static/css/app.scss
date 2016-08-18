@@ -24,3 +24,13 @@ section {
 .placeholder {
   display: none;
 }
+
+.loop {
+  span {
+    display: block;
+  }
+
+  .icon {
+    @include icon("volume-off");
+  }
+}
