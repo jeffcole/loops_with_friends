@@ -30,7 +30,11 @@ section {
     display: block;
   }
 
-  .icon {
+  .playing {
+    @include icon("volume-up");
+  }
+
+  .queued, .not-playing {
     @include icon("volume-off");
   }
 }
