@@ -18,10 +18,10 @@
     #BDCC97,
     #979EA0;
   $grid-item-border-size: 9px;
-  $grid-item-columns: 4;
+  $grid-item-columns: 3;
   $grid-item-big-columns: 8;
   $grid-item-color: white;
-  $grid-item-height: 14em;
+  $grid-item-height: 10em;
 
   @include clearfix;
 
