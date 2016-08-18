@@ -20,42 +20,41 @@ root user =
     , div [ class "grid-items" ]
         [ div [ class "grid-item" ]
             [ Loop.View.root user.loop
-            , playerButton (User.Helpers.loopState user)
+            , playerControls (User.Helpers.loopState user)
             ]
         ]
     ]
 
 
-playerButton : Loop.Types.State -> Html Msg
-playerButton state =
+playerControls : Loop.Types.State -> Html Msg
+playerControls state =
   case state of
     Loop.Types.NotPlaying ->
       playButton
     Loop.Types.Queued ->
-      queuedMessage
+      queuedIndicator
     Loop.Types.Playing ->
       stopButton
 
 
 playButton : Html Msg
 playButton =
-  button
-    [ onClick Play
-    ]
-    [ text "Play" ]
-
-
-queuedMessage : Html Msg
-queuedMessage =
   span
-    [
+    [ class "play-button"
+    , onClick Play
     ]
-    [ text "Coming Up!" ]
+    []
+
+
+queuedIndicator : Html Msg
+queuedIndicator =
+  span [ class "queued-indicator" ] []
 
 
 stopButton : Html Msg
 stopButton =
-  button
-    [ onClick Stop
+  span
+    [ class "stop-button"
+    , onClick Stop
     ]
-    [ text "Stop" ]
+    []
