@@ -13,7 +13,6 @@ root model =
   div [ class "loop" ]
     [ span [ class (stateClass model.state) ] []
     , span [] [ text (humanizedName model.name) ]
-    , span [] [ text (stateString model.state) ]
     ]
 
 
@@ -23,14 +22,6 @@ stateClass state =
     Loop.Types.NotPlaying -> "not-playing"
     Loop.Types.Queued -> "queued"
     Loop.Types.Playing -> "playing"
-
-
-stateString : Loop.Types.State -> String
-stateString state =
-  case state of
-    Loop.Types.NotPlaying -> "Stopped"
-    Loop.Types.Queued -> "Queued"
-    Loop.Types.Playing -> "Playing"
 
 
 humanizedName : String -> String

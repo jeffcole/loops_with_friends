@@ -3,6 +3,7 @@
 @import "bourbon/bourbon";
 // Bourbon Bitters Scaffolding
 @import "base/base";
+@import "animate.css/animate";
 
 body {
   color: $base-font-color;
@@ -30,11 +31,25 @@ section {
     display: block;
   }
 
-  .playing {
-    @include icon("volume-up");
+  .not-playing, .queued, .playing {
+    @extend .animated;
+    @extend .infinite;
   }
 
-  .queued, .not-playing {
+  .not-playing, .queued {
     @include icon("volume-off");
+  }
+
+  .not-playing, {
+
+  }
+
+  .queued, {
+    @extend .flash;
+  }
+
+  .playing {
+    @include icon("volume-up");
+    @extend .tada;
   }
 }

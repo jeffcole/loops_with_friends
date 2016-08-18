@@ -2,6 +2,7 @@
   "repository": {},
   "dependencies": {},
   "devDependencies": {
+    "animate.css": "^3.5.1",
     "autoprefixer": "^6.4.0",
     "babel-core": "^6.9.1",
     "babel-loader": "^6.2.4",
