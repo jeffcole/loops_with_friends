@@ -1,17 +1,8 @@
 @import "normalize.css/normalize";
-
-$fa-font-path: "~font-awesome/fonts";
-@import "font-awesome/scss/font-awesome";
-
 // Bourbon is vendorized until 5.0 is released as an npm package
 @import "bourbon/bourbon";
-
-// $visual-grid: true;
-@import "bourbon-neat/app/assets/stylesheets/neat";
-
 // Bourbon Bitters Scaffolding
 @import "base/base";
-
 
 body {
   color: $base-font-color;

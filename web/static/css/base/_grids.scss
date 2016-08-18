@@ -1,3 +1,6 @@
+// $visual-grid: true;
+@import "bourbon-neat/app/assets/stylesheets/neat";
+
 @mixin grid-item-columns($columns) {
   width: (100% / 12) * $columns;
 }
