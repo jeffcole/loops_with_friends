@@ -1,0 +1,16 @@
+.play-button, .stop-button {
+  cursor: pointer;
+}
+
+.play-button {
+  @include icon("play-circle");
+}
+
+.queued-indicator {
+  @include icon("circle-o-notch");
+  @extend .fa-spin;
+}
+
+.stop-button {
+  @include icon("stop-circle");
+}

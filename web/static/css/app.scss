@@ -1,9 +1,11 @@
 @import "normalize.css/normalize";
+@import "animate.css/animate";
 // Bourbon is vendorized until 5.0 is released as an npm package
 @import "bourbon/bourbon";
 // Bourbon Bitters Scaffolding
 @import "base/base";
-@import "animate.css/animate";
+@import "controls";
+
 
 body {
   color: $base-font-color;
@@ -52,17 +54,4 @@ section {
     @include icon("volume-up");
     @extend .tada;
   }
-}
-
-.play-button {
-  @include icon("play-circle");
-}
-
-.queued-indicator {
-  @include icon("circle-o-notch");
-  @extend .fa-spin;
-}
-
-.stop-button {
-  @include icon("stop-circle");
 }
