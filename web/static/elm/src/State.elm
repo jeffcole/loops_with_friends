@@ -7,6 +7,7 @@ import Phoenix.Push
 import Phoenix.Socket
 import Time
 
+import Loop.Types
 import Presence.State
 import User.Helpers
 import User.State
@@ -80,7 +81,7 @@ update msg model =
         user = User.Helpers.getUser userId model.users
         (newUser, userCmds, outMsg) = User.State.update userMsg user
         newUsers = User.Helpers.replace newUser model.users
-        (socket, socketCmds) = Socket.pushUserMsg outMsg userId model.socket
+        (socket, socketCmds) = pushIfPlayerUser outMsg userId model
       in
         ( { model | users = newUsers, socket = socket }
         , Cmd.batch
@@ -147,3 +148,14 @@ playOrQueueLoop user users =
   if User.Helpers.anyLoopsPlaying users
     then User.State.queueLoop user
     else User.State.playLoop user
+
+
+pushIfPlayerUser
+  :  Loop.Types.OutMsg
+  -> User.Types.ID
+  -> Model
+  -> (Phoenix.Socket.Socket Msg, Cmd (Phoenix.Socket.Msg Msg))
+pushIfPlayerUser outMsg userId model =
+  if userId == model.userId
+    then Socket.pushUserMsg outMsg userId model.socket
+    else (model.socket, Cmd.none)
