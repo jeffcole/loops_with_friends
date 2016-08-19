@@ -6,3 +6,7 @@ $fa-font-path: "~font-awesome/fonts";
     @extend .fa;
     @extend .fa-#{$name};
 }
+
+@mixin icon-effect($effect) {
+  @extend .fa-#{$effect};
+}

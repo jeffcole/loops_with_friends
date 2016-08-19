@@ -5,6 +5,7 @@
 // Bourbon Bitters Scaffolding
 @import "base/base";
 @import "controls";
+@import "loop";
 
 
 body {
@@ -24,34 +25,6 @@ section {
   margin-bottom: $base-spacing;
 }
 
-.placeholder {
+.grid-item.placeholder {
   display: none;
-}
-
-.loop {
-  span {
-    display: block;
-  }
-
-  .not-playing, .queued, .playing {
-    @extend .animated;
-    @extend .infinite;
-  }
-
-  .not-playing, .queued {
-    @include icon("volume-off");
-  }
-
-  .not-playing, {
-
-  }
-
-  .queued, {
-    @extend .flash;
-  }
-
-  .playing {
-    @include icon("volume-up");
-    @extend .tada;
-  }
 }

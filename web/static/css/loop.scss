@@ -1,0 +1,30 @@
+.loop {
+  span {
+    display: block;
+  }
+
+  .not-playing, .queued {
+    @include icon("volume-off");
+  }
+
+  .queued, {
+    @extend .flash;
+  }
+
+  .playing {
+    @include icon("volume-up");
+    @extend .tada;
+  }
+
+  .not-playing, .queued, .playing {
+    @extend .animated;
+    @extend .infinite;
+
+    // This must be specified after the icon inclusion
+    font-size: 2.5em;
+  }
+
+  .name {
+    padding: 0.5em;
+  }
+}

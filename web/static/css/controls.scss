@@ -8,9 +8,14 @@
 
 .queued-indicator {
   @include icon("circle-o-notch");
-  @extend .fa-spin;
+  @include icon-effect("spin");
 }
 
 .stop-button {
   @include icon("stop-circle");
+}
+
+.play-button, .queued-indicator, .stop-button {
+  // Font size must be specified after the icon inclusion
+  font-size: 3em;
 }

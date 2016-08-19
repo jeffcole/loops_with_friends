@@ -19,15 +19,17 @@ root user =
     [ h2 [] [ text "Your Loop" ]
     , div [ class "grid-items" ]
         [ div [ class "grid-item" ]
-            [ Loop.View.root user.loop
-            , playerControls (User.Helpers.loopState user)
+            [ div []
+                [ Loop.View.root user.loop
+                , control (User.Helpers.loopState user)
+                ]
             ]
         ]
     ]
 
 
-playerControls : Loop.Types.State -> Html Msg
-playerControls state =
+control : Loop.Types.State -> Html Msg
+control state =
   case state of
     Loop.Types.NotPlaying ->
       playButton

@@ -12,7 +12,7 @@ root : Model -> Html msg
 root model =
   div [ class "loop" ]
     [ span [ class (stateClass model.state) ] []
-    , span [] [ text (humanizedName model.name) ]
+    , span [ class "name" ] [ text (humanizedName model.name) ]
     ]
 
 
