@@ -43,6 +43,10 @@
     transition: all 0.2s ease-in-out;
     width: 100%;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
     @include media($large-screen) {
       @include grid-item-columns($grid-item-columns);
     }
