@@ -7,8 +7,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Loops</title>
-    
+    <title>Loops With Friends</title>
+
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
 
     <link href='//fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
