@@ -41,7 +41,7 @@ update msg model =
     Play ->
       let
         playerUser = Helpers.playerUser model
-        (user, cmds) = playOrQueueLoop playerUser model.users
+        (user, cmds) = User.State.queueLoop playerUser
         users = User.Helpers.replace user model.users
       in
         ( { model | users = users }
@@ -58,7 +58,7 @@ update msg model =
       let
         userId = Socket.decodeUserId json
         user = User.Helpers.getUser userId model.users
-        (newUser, cmds) = playOrQueueLoop user model.users
+        (newUser, cmds) = User.State.queueLoop user
         users = User.Helpers.replace newUser model.users
       in
         ( { model | users = users }
@@ -133,21 +133,12 @@ subscriptions model =
     , Phoenix.Socket.listen model.socket SocketMsg
     ]
 
+
 measureSubscriptions : Model -> Sub Msg
 measureSubscriptions model =
-  if User.Helpers.anyLoopsPlaying model.users
+  if User.Helpers.anyLoopsQueued model.users
     then Time.every (4.799625 * Time.second) MeasureStart
     else Sub.none
-
-
-playOrQueueLoop
-  :  User.Types.Model
-  -> User.Types.Collection
-  -> (User.Types.Model, Cmd User.Types.Msg)
-playOrQueueLoop user users =
-  if User.Helpers.anyLoopsPlaying users
-    then User.State.queueLoop user
-    else User.State.playLoop user
 
 
 pushIfPlayerUser

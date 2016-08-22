@@ -68,7 +68,6 @@ var _jeffcole$loops$Native_WebAudio = function() {
       gainNode.connect(context.destination);
       gainNode.gain.value = 0.05;
 
-      bufferSource.loop = true;
       bufferSource.start(0);
 
       sound.bufferSource = bufferSource;

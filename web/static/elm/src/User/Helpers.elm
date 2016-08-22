@@ -27,13 +27,13 @@ replace user users =
   |> Dict.insert user.id user
 
 
-anyLoopsPlaying : Collection -> Bool
-anyLoopsPlaying collection =
+anyLoopsQueued : Collection -> Bool
+anyLoopsQueued collection =
   Dict.values collection
   |> List.map .loop
-  |> List.any Loop.Helpers.isPlayingOrQueued
+  |> List.any Loop.Helpers.isQueuedOrPlaying
 
 
 hasQueuedLoop : Model -> Bool
 hasQueuedLoop model =
-  Loop.Helpers.isQueued model.loop
+  Loop.Helpers.isQueuedOrPlaying model.loop

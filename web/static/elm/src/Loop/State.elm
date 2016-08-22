@@ -28,7 +28,9 @@ update msg model =
 
     PlaySucceed sound ->
       ( { model | state = Playing, sound = Loaded sound }
-      , Played
+      , case model.state of
+          Queued -> Played
+          _ -> NoMsg
       )
 
     PlayFail error ->
@@ -45,23 +47,15 @@ update msg model =
 
 queue : Model -> (Model, Cmd Msg)
 queue model =
-  let
-    state =
-      case model.state of
-        Playing ->
-          Playing
-        _ ->
-          Queued
-  in
-    ( { model | state = state }
-    , Cmd.none
-    )
+  ( { model | state = Queued }
+  , Cmd.none
+  )
 
 
 play : Model -> Cmd Msg
 play model =
   case model.state of
-    Playing ->
+    NotPlaying ->
       Cmd.none
     _ ->
       performPlay model.sound
@@ -71,15 +65,13 @@ stop : Model -> (Model, Cmd Msg)
 stop model =
   case model.state of
     Playing ->
-      ( model
+      ( {model | state = NotPlaying }
       , performStop model.sound
       )
-    Queued ->
+    _ ->
       ( {model | state = NotPlaying }
       , Cmd.none
       )
-    _ ->
-      (model, Cmd.none)
 
 
 performLoad : String -> Cmd Msg

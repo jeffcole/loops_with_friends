@@ -17,12 +17,6 @@ import User.Helpers
 import User.Types exposing (..)
 
 
-playLoop : Model -> (Model, Cmd Msg)
-playLoop model =
-  ( model
-  , Loop.State.play model.loop
-  )
-
 playQueuedLoops : Collection -> (Collection, List LoopCmd)
 playQueuedLoops collection =
   let
@@ -47,6 +41,13 @@ usersAndPlayCmds model =
     ( model
     , LoopCmd newModel.id cmds
     )
+
+
+playLoop : Model -> (Model, Cmd Msg)
+playLoop model =
+  ( model
+  , Loop.State.play model.loop
+  )
 
 
 queueLoop : Model -> (Model, Cmd Msg)

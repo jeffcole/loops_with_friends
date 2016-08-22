@@ -4,16 +4,9 @@ module Loop.Helpers exposing (..)
 import Loop.Types exposing (..)
 
 
-isPlayingOrQueued : Model -> Bool
-isPlayingOrQueued model =
+isQueuedOrPlaying : Model -> Bool
+isQueuedOrPlaying model =
   case model.state of
+    Queued -> True
     Playing -> True
-    Queued -> True
-    NotPlaying -> False
-
-
-isQueued : Model -> Bool
-isQueued model =
-  case model.state of
-    Queued -> True
     _ -> False
