@@ -30,7 +30,8 @@ defmodule Loops.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.2"},
+    [{:mix_test_watch, "~> 0.2", only: :dev},
+     {:phoenix, "~> 1.2"},
      {:phoenix_pubsub, "~> 1.0"},
      {:postgrex, "~> 0.11.2"},
      {:phoenix_ecto, "~> 3.0"},
