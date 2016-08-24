@@ -1,4 +1,4 @@
-defmodule Loops.Presence do
+defmodule LoopsWithFriends.Presence do
   @moduledoc """
   Provides presence tracking to channels and processes.
 
@@ -9,9 +9,9 @@ defmodule Loops.Presence do
 
   Presences can be tracked in your channel after joining:
 
-      defmodule Loops.MyChannel do
-        use Loops.Web, :channel
-        alias Loops.Presence
+      defmodule LoopsWithFriends.MyChannel do
+        use LoopsWithFriends.Web, :channel
+        alias LoopsWithFriends.Presence
 
         def join("some:topic", _params, socket) do
           send(self, :after_join)
@@ -72,6 +72,6 @@ defmodule Loops.Presence do
   information, while maintaining the required `:metas` field from the
   original presence data.
   """
-  use Phoenix.Presence, otp_app: :loops,
-                        pubsub_server: Loops.PubSub
+  use Phoenix.Presence, otp_app: :loops_with_friends,
+                        pubsub_server: LoopsWithFriends.PubSub
 end

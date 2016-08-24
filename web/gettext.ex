@@ -1,11 +1,11 @@
-defmodule Loops.Gettext do
+defmodule LoopsWithFriends.Gettext do
   @moduledoc """
   A module providing Internationalization with a gettext-based API.
 
   By using [Gettext](http://hexdocs.pm/gettext),
   your module gains a set of macros for translations, for example:
 
-      import Loops.Gettext
+      import LoopsWithFriends.Gettext
 
       # Simple translation
       gettext "Here is the string to translate"
@@ -20,5 +20,5 @@ defmodule Loops.Gettext do
 
   See the [Gettext Docs](http://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :loops
+  use Gettext, otp_app: :loops_with_friends
 end

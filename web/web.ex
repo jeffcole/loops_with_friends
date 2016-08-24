@@ -1,12 +1,12 @@
-defmodule Loops.Web do
+defmodule LoopsWithFriends.Web do
   @moduledoc """
   A module that keeps using definitions for controllers,
   views and so on.
 
   This can be used in your application as:
 
-      use Loops.Web, :controller
-      use Loops.Web, :view
+      use LoopsWithFriends.Web, :controller
+      use LoopsWithFriends.Web, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -30,12 +30,12 @@ defmodule Loops.Web do
     quote do
       use Phoenix.Controller
 
-      alias Loops.Repo
+      alias LoopsWithFriends.Repo
       import Ecto
       import Ecto.Query, only: [from: 1, from: 2]
 
-      import Loops.Router.Helpers
-      import Loops.Gettext
+      import LoopsWithFriends.Router.Helpers
+      import LoopsWithFriends.Gettext
     end
   end
 
@@ -49,9 +49,9 @@ defmodule Loops.Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import Loops.Router.Helpers
-      import Loops.ErrorHelpers
-      import Loops.Gettext
+      import LoopsWithFriends.Router.Helpers
+      import LoopsWithFriends.ErrorHelpers
+      import LoopsWithFriends.Gettext
     end
   end
 
@@ -65,10 +65,10 @@ defmodule Loops.Web do
     quote do
       use Phoenix.Channel
 
-      alias Loops.Repo
+      alias LoopsWithFriends.Repo
       import Ecto
       import Ecto.Query, only: [from: 1, from: 2]
-      import Loops.Gettext
+      import LoopsWithFriends.Gettext
     end
   end
 

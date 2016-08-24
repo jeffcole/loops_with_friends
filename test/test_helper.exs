@@ -1,3 +1,3 @@
 ExUnit.start
 
-Ecto.Adapters.SQL.Sandbox.mode(Loops.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(LoopsWithFriends.Repo, :manual)

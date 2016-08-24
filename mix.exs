@@ -1,8 +1,8 @@
-defmodule Loops.Mixfile do
+defmodule LoopsWithFriends.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :loops,
+    [app: :loops_with_friends,
      version: "0.0.1",
      elixir: "~> 1.3",
      elixirc_paths: elixirc_paths(Mix.env),
@@ -17,7 +17,7 @@ defmodule Loops.Mixfile do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [mod: {Loops, []},
+    [mod: {LoopsWithFriends, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger,
                     :gettext, :phoenix_ecto, :postgrex]]
   end

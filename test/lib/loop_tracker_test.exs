@@ -1,7 +1,7 @@
-defmodule Loops.LoopTrackerTest do
+defmodule LoopsWithFriends.LoopTrackerTest do
   use ExUnit.Case
 
-  import Loops.LoopTracker, only: [start_link: 0, next_loop: 0]
+  import LoopsWithFriends.LoopTracker, only: [start_link: 0, next_loop: 0]
 
   test "cycles the loop list" do
     start_link

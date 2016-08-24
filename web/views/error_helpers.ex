@@ -1,4 +1,4 @@
-defmodule Loops.ErrorHelpers do
+defmodule LoopsWithFriends.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -32,9 +32,9 @@ defmodule Loops.ErrorHelpers do
      #     dgettext "errors", "is invalid"
      #
      if count = opts[:count] do
-       Gettext.dngettext(Loops.Gettext, "errors", msg, msg, count, opts)
+       Gettext.dngettext(LoopsWithFriends.Gettext, "errors", msg, msg, count, opts)
      else
-       Gettext.dgettext(Loops.Gettext, "errors", msg, opts)
+       Gettext.dgettext(LoopsWithFriends.Gettext, "errors", msg, opts)
      end
    end
 end

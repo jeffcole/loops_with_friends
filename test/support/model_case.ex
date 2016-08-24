@@ -1,4 +1,4 @@
-defmodule Loops.ModelCase do
+defmodule LoopsWithFriends.ModelCase do
   @moduledoc """
   This module defines the test case to be used by
   model tests.
@@ -16,20 +16,20 @@ defmodule Loops.ModelCase do
 
   using do
     quote do
-      alias Loops.Repo
+      alias LoopsWithFriends.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query, only: [from: 1, from: 2]
-      import Loops.ModelCase
+      import LoopsWithFriends.ModelCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Loops.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(LoopsWithFriends.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Loops.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(LoopsWithFriends.Repo, {:shared, self()})
     end
 
     :ok
@@ -59,7 +59,7 @@ defmodule Loops.ModelCase do
   """
   def errors_on(struct, data) do
     struct.__struct__.changeset(struct, data)
-    |> Ecto.Changeset.traverse_errors(&Loops.ErrorHelpers.translate_error/1)
+    |> Ecto.Changeset.traverse_errors(&LoopsWithFriends.ErrorHelpers.translate_error/1)
     |> Enum.flat_map(fn {key, errors} -> for msg <- errors, do: {key, msg} end)
   end
 end

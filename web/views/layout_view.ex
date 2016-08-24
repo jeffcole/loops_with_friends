@@ -1,3 +1,3 @@
-defmodule Loops.LayoutView do
-  use Loops.Web, :view
+defmodule LoopsWithFriends.LayoutView do
+  use LoopsWithFriends.Web, :view
 end

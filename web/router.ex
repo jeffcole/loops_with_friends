@@ -1,5 +1,5 @@
-defmodule Loops.Router do
-  use Loops.Web, :router
+defmodule LoopsWithFriends.Router do
+  use LoopsWithFriends.Web, :router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -13,14 +13,14 @@ defmodule Loops.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", Loops do
+  scope "/", LoopsWithFriends do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Loops do
+  # scope "/api", LoopsWithFriends do
   #   pipe_through :api
   # end
 end

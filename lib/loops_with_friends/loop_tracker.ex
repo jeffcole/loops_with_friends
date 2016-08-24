@@ -1,4 +1,4 @@
-defmodule Loops.LoopTracker do
+defmodule LoopsWithFriends.LoopTracker do
   @loops [
     "80s_Back_Beat",
     "Amsterdam_Layers",

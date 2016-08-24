@@ -1,7 +1,7 @@
-defmodule Loops.JamChannel do
-  use Loops.Web, :channel
+defmodule LoopsWithFriends.JamChannel do
+  use LoopsWithFriends.Web, :channel
 
-  alias Loops.Presence
+  alias LoopsWithFriends.Presence
 
   intercept ["loop:played", "loop:stopped"]
 
@@ -16,7 +16,7 @@ defmodule Loops.JamChannel do
   def handle_info(:after_join, socket) do
     Presence.track(socket, socket.assigns.user_id, %{
       user_id: socket.assigns.user_id,
-      loop_name: Loops.LoopTracker.next_loop
+      loop_name: LoopsWithFriends.LoopTracker.next_loop
     })
 
     push socket, "presence_state", Presence.list(socket)

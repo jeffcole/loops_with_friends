@@ -1,5 +1,5 @@
-defmodule Loops.PageControllerTest do
-  use Loops.ConnCase
+defmodule LoopsWithFriends.PageControllerTest do
+  use LoopsWithFriends.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"

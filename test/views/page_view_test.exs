@@ -1,3 +1,3 @@
-defmodule Loops.PageViewTest do
-  use Loops.ConnCase, async: true
+defmodule LoopsWithFriends.PageViewTest do
+  use LoopsWithFriends.ConnCase, async: true
 end

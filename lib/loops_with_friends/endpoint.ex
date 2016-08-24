@@ -1,14 +1,14 @@
-defmodule Loops.Endpoint do
-  use Phoenix.Endpoint, otp_app: :loops
+defmodule LoopsWithFriends.Endpoint do
+  use Phoenix.Endpoint, otp_app: :loops_with_friends
 
-  socket "/socket", Loops.UserSocket
+  socket "/socket", LoopsWithFriends.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
   plug Plug.Static,
-    at: "/", from: :loops, gzip: false,
+    at: "/", from: :loops_with_friends, gzip: false,
     only: ~w(css fonts images js sounds favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
@@ -35,5 +35,5 @@ defmodule Loops.Endpoint do
     key: "_loops_key",
     signing_salt: "fhWQSt71"
 
-  plug Loops.Router
+  plug LoopsWithFriends.Router
 end

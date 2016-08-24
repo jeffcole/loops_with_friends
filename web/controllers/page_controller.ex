@@ -1,5 +1,5 @@
-defmodule Loops.PageController do
-  use Loops.Web, :controller
+defmodule LoopsWithFriends.PageController do
+  use LoopsWithFriends.Web, :controller
 
   def index(conn, _params) do
     render conn, "index.html"

@@ -1,3 +1,3 @@
-defmodule Loops.LayoutViewTest do
-  use Loops.ConnCase, async: true
+defmodule LoopsWithFriends.LayoutViewTest do
+  use LoopsWithFriends.ConnCase, async: true
 end

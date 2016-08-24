@@ -6,15 +6,15 @@
 use Mix.Config
 
 # Configures the endpoint
-config :loops, Loops.Endpoint,
+config :loops_with_friends, LoopsWithFriends.Endpoint,
   url: [host: "localhost"],
   root: Path.dirname(__DIR__),
   secret_key_base: "xA37helMDnP8D7u7fmHE+bYT+UxpXmor3z808NXr09eZKRuUKPnwghJLNz9cZQO7",
   render_errors: [accepts: ~w(html json)],
-  pubsub: [name: Loops.PubSub,
+  pubsub: [name: LoopsWithFriends.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
-config :loops, ecto_repos: [Loops.Repo]
+config :loops_with_friends, ecto_repos: [LoopsWithFriends.Repo]
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -1,5 +1,5 @@
-defmodule Loops.ErrorView do
-  use Loops.Web, :view
+defmodule LoopsWithFriends.ErrorView do
+  use LoopsWithFriends.Web, :view
 
   def render("404.html", _assigns) do
     "Page not found"

@@ -1,4 +1,4 @@
-defmodule Loops.ChannelCase do
+defmodule LoopsWithFriends.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -20,22 +20,22 @@ defmodule Loops.ChannelCase do
       # Import conveniences for testing with channels
       use Phoenix.ChannelTest
 
-      alias Loops.Repo
+      alias LoopsWithFriends.Repo
       import Ecto
       import Ecto.Changeset
       import Ecto.Query, only: [from: 1, from: 2]
 
 
       # The default endpoint for testing
-      @endpoint Loops.Endpoint
+      @endpoint LoopsWithFriends.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Loops.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(LoopsWithFriends.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Loops.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(LoopsWithFriends.Repo, {:shared, self()})
     end
 
     :ok

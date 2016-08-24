@@ -1,3 +1,3 @@
-defmodule Loops.PageView do
-  use Loops.Web, :view
+defmodule LoopsWithFriends.PageView do
+  use LoopsWithFriends.Web, :view
 end
