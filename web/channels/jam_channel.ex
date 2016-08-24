@@ -16,7 +16,7 @@ defmodule LoopsWithFriends.JamChannel do
   def handle_info(:after_join, socket) do
     Presence.track(socket, socket.assigns.user_id, %{
       user_id: socket.assigns.user_id,
-      loop_name: LoopsWithFriends.LoopTracker.next_loop
+      loop_name: LoopsWithFriends.LoopCycler.next_loop
     })
 
     push socket, "presence_state", Presence.list(socket)

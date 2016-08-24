@@ -12,7 +12,7 @@ defmodule LoopsWithFriends do
       # Start the Ecto repository
       supervisor(LoopsWithFriends.Repo, []),
       supervisor(LoopsWithFriends.Presence, []),
-      worker(LoopsWithFriends.LoopTracker, []),
+      worker(LoopsWithFriends.LoopCycler, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
