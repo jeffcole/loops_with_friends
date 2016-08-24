@@ -1,4 +1,8 @@
 defmodule LoopsWithFriends.LoopCycler do
+  @moduledoc """
+  Cycles loops.
+  """
+
   @loops [
     "80s_Back_Beat",
     "Amsterdam_Layers",

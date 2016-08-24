@@ -1,5 +1,11 @@
 defmodule LoopsWithFriends do
+  @moduledoc """
+  A collaborative music-making web app.
+  """
+
   use Application
+
+  alias LoopsWithFriends.Endpoint
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -24,7 +30,7 @@ defmodule LoopsWithFriends do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    LoopsWithFriends.Endpoint.config_change(changed, removed)
+    Endpoint.config_change(changed, removed)
     :ok
   end
 end
