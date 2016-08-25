@@ -3,16 +3,22 @@ defmodule LoopsWithFriends.LoopCyclerTest do
 
   alias LoopsWithFriends.LoopCycler
 
-  test "cycles the loop list" do
-    LoopCycler.start_link
+  setup do
+    LoopCycler.start_link(name: __MODULE__)
 
-    assert LoopCycler.next_loop == "80s_Back_Beat"
-    assert LoopCycler.next_loop == "Amsterdam_Layers"
-    assert LoopCycler.next_loop == "Synthetic_String_Bass"
-    assert LoopCycler.next_loop == "Degenerating_Pitch_Vox"
-    assert LoopCycler.next_loop == "Kyoto_Night_Guitar"
-    assert LoopCycler.next_loop == "Conga_Groove"
-    assert LoopCycler.next_loop == "African_Rain_Caxixi"
-    assert LoopCycler.next_loop == "80s_Back_Beat"
+    {:ok, next_loop: fn -> LoopCycler.next_loop(__MODULE__) end}
+  end
+
+  describe "`.next_loop`" do
+    test "cycles the loop list", %{next_loop: next_loop} do
+      assert next_loop.() == "80s_Back_Beat"
+      assert next_loop.() == "Amsterdam_Layers"
+      assert next_loop.() == "Synthetic_String_Bass"
+      assert next_loop.() == "Degenerating_Pitch_Vox"
+      assert next_loop.() == "Kyoto_Night_Guitar"
+      assert next_loop.() == "Conga_Groove"
+      assert next_loop.() == "African_Rain_Caxixi"
+      assert next_loop.() == "80s_Back_Beat"
+    end
   end
 end

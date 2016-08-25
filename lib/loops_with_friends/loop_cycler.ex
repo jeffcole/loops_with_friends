@@ -3,6 +3,8 @@ defmodule LoopsWithFriends.LoopCycler do
   Cycles loops.
   """
 
+  @name __MODULE__
+
   @loops [
     "80s_Back_Beat",
     "Amsterdam_Layers",
@@ -13,12 +15,14 @@ defmodule LoopsWithFriends.LoopCycler do
     "African_Rain_Caxixi",
   ]
 
-  def start_link do
-    Agent.start_link(fn -> @loops end, name: __MODULE__)
+  def start_link(opts \\ []) do
+    opts = Keyword.put_new(opts, :name, @name)
+
+    Agent.start_link(fn -> @loops end, opts)
   end
 
-  def next_loop do
-    Agent.get_and_update __MODULE__, fn [head | tail] ->
+  def next_loop(agent_name \\ @name) do
+    Agent.get_and_update agent_name, fn [head | tail] ->
       {head, tail ++ [head]}
     end
   end

@@ -3,7 +3,7 @@ defmodule LoopsWithFriends.UserSocketTest do
 
   alias LoopsWithFriends.UserSocket
 
-  test "connecting assigns a UUID" do
+  test "`.connect` assigns a UUID" do
     assert {:ok, socket} = connect(UserSocket, %{})
 
     assert UUID.info!(socket.assigns.user_id)
