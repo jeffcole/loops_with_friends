@@ -41,23 +41,11 @@ pushUserMsg msg userId socket =
         (socket, Cmd.none)
 
 
-socketTopic : Phoenix.Socket.Socket msg -> String
-socketTopic socket =
-  socket.channels
-  |> Dict.keys
-  |> List.head
-  |> Maybe.withDefault "unknown_topic"
-
-
-push : String -> User.Types.ID -> String -> Phoenix.Push.Push msg
-push topic userId event =
-  Phoenix.Push.init ("loop:" ++ event) topic
-  |> Phoenix.Push.withPayload (pushPayload userId)
-
-
-pushPayload : User.Types.ID -> JE.Value
-pushPayload userId =
-  JE.object [ ("user_id", JE.string userId) ]
+decodeUserId : JE.Value -> User.Types.ID
+decodeUserId json =
+  case JD.decodeValue ("user_id" := JD.string) json of
+    Ok userId -> userId
+    Err message -> ""
 
 
 channel : String -> Phoenix.Channel.Channel Msg
@@ -87,13 +75,6 @@ setUserId json =
   SetUserId (decodeUserId json)
 
 
-decodeUserId : JE.Value -> User.Types.ID
-decodeUserId json =
-  case JD.decodeValue ("user_id" := JD.string) json of
-    Ok userId -> userId
-    Err message -> ""
-
-
 socketUrl : String -> String
 socketUrl host =
   socketProtocol host ++ host ++ "/socket/websocket"
@@ -102,3 +83,22 @@ socketUrl host =
 socketProtocol : String -> String
 socketProtocol host =
   "ws://"
+
+
+socketTopic : Phoenix.Socket.Socket msg -> String
+socketTopic socket =
+  socket.channels
+  |> Dict.keys
+  |> List.head
+  |> Maybe.withDefault "unknown_topic"
+
+
+push : String -> User.Types.ID -> String -> Phoenix.Push.Push msg
+push topic userId event =
+  Phoenix.Push.init ("loop:" ++ event) topic
+  |> Phoenix.Push.withPayload (pushPayload userId)
+
+
+pushPayload : User.Types.ID -> JE.Value
+pushPayload userId =
+  JE.object [ ("user_id", JE.string userId) ]
