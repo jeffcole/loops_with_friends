@@ -2,7 +2,8 @@
 
   document.addEventListener("DOMContentLoaded", function (event) {
     var elmApp = Elm.App.fullscreen({
-      host: document.location.host
+      host: document.location.host,
+      topic: "<%= LoopsWithFriends.JamBalancer.next_jam %>"
     });
   });
 

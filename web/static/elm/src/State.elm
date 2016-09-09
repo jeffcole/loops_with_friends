@@ -18,10 +18,10 @@ import Socket
 import Types exposing (..)
 
 
-initialState : { host : String } -> (Model, Cmd Msg)
+initialState : { host : String, topic : String } -> (Model, Cmd Msg)
 initialState flags =
   let
-    (socket, socketCmds) = Socket.joinChannel flags.host
+    (socket, socketCmds) = Socket.joinChannel flags.host flags.topic
   in
     ( { userId = ""
       , users = User.Types.emptyCollection

@@ -7,7 +7,7 @@ import State
 import View
 
 
-main : Program { host : String }
+main : Program { host : String, topic : String }
 main =
   Html.App.programWithFlags
     { init = State.initialState
