@@ -1,5 +1,5 @@
 defmodule LoopsWithFriends.LoopCyclerTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias LoopsWithFriends.LoopCycler
 
@@ -9,7 +9,8 @@ defmodule LoopsWithFriends.LoopCyclerTest do
     {:ok, next_loop: fn -> LoopCycler.next_loop(__MODULE__) end}
   end
 
-  describe "`.next_loop`" do
+  describe "`next_loop/0`" do
+    # TODO This needs to be made jam-aware.
     test "cycles the loop list", %{next_loop: next_loop} do
       assert next_loop.() == "80s_Back_Beat"
       assert next_loop.() == "Amsterdam_Layers"

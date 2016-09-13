@@ -19,6 +19,7 @@ defmodule LoopsWithFriends do
       supervisor(LoopsWithFriends.Repo, []),
       supervisor(LoopsWithFriends.Presence, []),
       worker(LoopsWithFriends.LoopCycler, []),
+      worker(LoopsWithFriends.JamBalancer, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

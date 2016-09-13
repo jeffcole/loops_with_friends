@@ -3,7 +3,7 @@
   document.addEventListener("DOMContentLoaded", function (event) {
     var elmApp = Elm.App.fullscreen({
       host: document.location.host,
-      topic: "<%= LoopsWithFriends.JamBalancer.next_jam %>"
+      topic: "jams:<%= LoopsWithFriends.JamBalancer.current_jam %>"
     });
   });
 

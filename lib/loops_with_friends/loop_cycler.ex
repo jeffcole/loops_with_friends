@@ -21,8 +21,8 @@ defmodule LoopsWithFriends.LoopCycler do
     Agent.start_link(fn -> @loops end, opts)
   end
 
-  def next_loop(agent_name \\ @name) do
-    Agent.get_and_update agent_name, fn [head | tail] ->
+  def next_loop(agent \\ @name) do
+    Agent.get_and_update agent, fn [head | tail] ->
       {head, tail ++ [head]}
     end
   end

@@ -18,7 +18,7 @@ defmodule LoopsWithFriends.JamChannelTest do
     test "assigns the `jam_id`", %{socket: socket} do
       {:ok, _reply, socket} = subscribe_and_join(socket, "jams:1", %{})
 
-      assert socket.assigns.jam_id == 1
+      assert socket.assigns.jam_id == "1"
     end
 
     test "pushes presence state", %{socket: socket} do

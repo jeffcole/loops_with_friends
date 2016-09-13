@@ -5,6 +5,7 @@ defmodule LoopsWithFriends.JamChannel do
 
   use LoopsWithFriends.Web, :channel
 
+  alias LoopsWithFriends.JamBalancer
   alias LoopsWithFriends.LoopCycler
   alias LoopsWithFriends.Presence
 
@@ -15,7 +16,7 @@ defmodule LoopsWithFriends.JamChannel do
 
     {:ok,
      %{user_id: socket.assigns.user_id},
-     assign(socket, :jam_id, String.to_integer(jam_id))}
+     assign(socket, :jam_id, jam_id)}
   end
 
   def handle_info(:after_join, socket) do
@@ -24,7 +25,10 @@ defmodule LoopsWithFriends.JamChannel do
       loop_name: LoopCycler.next_loop
     })
 
-    push socket, "presence_state", Presence.list(socket)
+    presence_list = Presence.list(socket)
+    JamBalancer.refresh(socket.assigns.jam_id, presence_list)
+
+    push socket, "presence_state", presence_list
 
     {:noreply, socket}
   end
@@ -41,5 +45,11 @@ defmodule LoopsWithFriends.JamChannel do
     end
 
     {:noreply, socket}
+  end
+
+  def terminate(msg, socket) do
+    JamBalancer.remove_user(socket.assigns.jam_id, socket.assigns.user_id)
+
+    msg
   end
 end
