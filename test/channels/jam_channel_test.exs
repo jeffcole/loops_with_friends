@@ -7,7 +7,7 @@ defmodule LoopsWithFriends.JamChannelTest do
     {:ok, socket: socket}
   end
 
-  describe "`.join`" do
+  describe "`join`" do
     test "replies with a `user_id`", %{socket: socket} do
       {:ok, reply, _socket} = subscribe_and_join(socket, "jams:1", %{})
 
@@ -16,7 +16,7 @@ defmodule LoopsWithFriends.JamChannelTest do
     end
 
     test "assigns the `jam_id`", %{socket: socket} do
-      {:ok, _reply, socket} = subscribe_and_join(socket, "jams:1", %{})
+      socket = subscribe_and_join!(socket, "jams:1", %{})
 
       assert socket.assigns.jam_id == "1"
     end
@@ -28,27 +28,32 @@ defmodule LoopsWithFriends.JamChannelTest do
     end
   end
 
-  describe "`.handle_in` given a loop event" do
+  describe "`handle_in` given a loop event" do
     test "broadcasts the event", %{socket: socket} do
-      {:ok, _reply, socket} = subscribe_and_join(socket, "jams:1", %{})
+      socket = subscribe_and_join!(socket, "jams:1", %{})
+      user_id = socket.assigns.user_id
 
-      push socket, "loop:played", %{"user_id" => "123"}
+      push socket, "loop:played", %{"user_id" => user_id}
 
-      assert_broadcast "loop:played", %{user_id: "123"}
+      assert_broadcast "loop:played", %{user_id: ^user_id}
     end
   end
 
-  describe "`.handle_out` given a loop event" do
+  describe "`handle_out` given a loop event" do
     test "pushes events to channel subscribers", %{socket: socket} do
-      {:ok, _reply, socket} = subscribe_and_join(socket, "jams:1", %{})
+      subscribe_and_join!(socket, "jams:1", %{})
 
-      push socket, "loop:played", %{"user_id" => "123"}
+      {:ok, socket_2} = connect(LoopsWithFriends.UserSocket, %{})
+      {:ok, _reply, socket_2} = join(socket_2, "jams:1")
+      user_2 = socket_2.assigns.user_id
 
-      assert_push "loop:played", %{user_id: "123"}
+      push socket_2, "loop:played", %{"user_id" => user_2}
+
+      assert_push "loop:played", %{user_id: ^user_2}
     end
 
     test "does not push events to the message sender", %{socket: socket} do
-      {:ok, _reply, socket} = subscribe_and_join(socket, "jams:1", %{})
+      socket = subscribe_and_join!(socket, "jams:1", %{})
 
       push socket, "loop:played", %{"user_id" => socket.assigns.user_id}
 

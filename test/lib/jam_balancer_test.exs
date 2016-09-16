@@ -10,13 +10,13 @@ defmodule LoopsWithFriends.JamBalancerTest do
     {:ok, current_jam: current_jam}
   end
 
-  describe "`.current_jam` when there are no users" do
+  describe "`current_jam/0` when there are no users" do
     test "returns a UUID", %{current_jam: current_jam} do
       assert UUID.info!(current_jam.())
     end
   end
 
-  describe "`.current_jam` when the last jam has less than seven users" do
+  describe "`current_jam/0` when the last jam has fewer than seven users" do
     test "returns the last jam", %{current_jam: current_jam} do
       initial_jam = current_jam.()
       refresh_with_one_user(initial_jam)
@@ -25,7 +25,7 @@ defmodule LoopsWithFriends.JamBalancerTest do
     end
   end
 
-  describe "`.current_jam` when the last jam has seven users" do
+  describe "`current_jam/0` when the last jam has seven users" do
     test "returns a different jam", %{current_jam: current_jam} do
       initial_jam = current_jam.()
       refresh_with_seven_users(initial_jam)
@@ -34,7 +34,7 @@ defmodule LoopsWithFriends.JamBalancerTest do
     end
   end
 
-  describe "`.current_jam` after a user is removed from a full jam" do
+  describe "`current_jam/0` after a user is removed from a full jam" do
     test "returns that jam", %{current_jam: current_jam} do
       initial_jam = current_jam.()
       refresh_with_seven_users(initial_jam)
@@ -44,7 +44,7 @@ defmodule LoopsWithFriends.JamBalancerTest do
     end
   end
 
-  describe "`.current_jam` when a previous jam has a user removed" do
+  describe "`current_jam/0` when a previous jam has a user removed" do
     test "returns the previous jam", %{current_jam: current_jam} do
       initial_jam = current_jam.()
       refresh_with_seven_users(initial_jam)
@@ -66,7 +66,7 @@ defmodule LoopsWithFriends.JamBalancerTest do
   end
 
   defp remove_user(jam) do
-    JamBalancer.remove(__MODULE__, jam, "user-3")
+    JamBalancer.remove_user(__MODULE__, jam, "user-3")
   end
 
   defp one_user do
