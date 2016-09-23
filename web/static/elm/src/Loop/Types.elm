@@ -43,3 +43,20 @@ initialModel name =
   , sound = NotLoaded
   , state = NotPlaying
   }
+
+
+initialModelFromEvent : String -> String -> Model
+initialModelFromEvent name event =
+  let
+    model = initialModel name
+  in
+    { model | state = stateFromEvent event }
+
+
+stateFromEvent : String -> State
+stateFromEvent event =
+  case event of
+    "played" ->
+      Queued
+    _ ->
+      NotPlaying

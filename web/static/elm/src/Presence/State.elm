@@ -152,7 +152,8 @@ toUserAndCmds
   : UserPresence -> (User.Types.Model, User.Types.LoopCmd)
 toUserAndCmds userPresence =
   let
-    (loop, loopCmds) = Loop.State.initialState userPresence.loopName
+    (loop, loopCmds) =
+      Loop.State.initialState userPresence.loopName userPresence.loopEvent
     user = User.Types.Model userPresence.userId loop
   in
     (user, User.Types.LoopCmd user.id loopCmds)
@@ -163,3 +164,4 @@ userPresenceDecoder =
   JDP.decode UserPresence
     |> JDP.required "user_id" JD.string
     |> JDP.required "loop_name" JD.string
+    |> JDP.optional "loop_event" JD.string "none"

@@ -5,9 +5,7 @@ defmodule LoopsWithFriends.JamChannel do
 
   use LoopsWithFriends.Web, :channel
 
-  alias LoopsWithFriends.JamBalancer
-  alias LoopsWithFriends.LoopCycler
-  alias LoopsWithFriends.Presence
+  alias LoopsWithFriends.{JamBalancer, LoopCycler, Presence}
 
   intercept ["loop:played", "loop:stopped"]
 
@@ -34,6 +32,8 @@ defmodule LoopsWithFriends.JamChannel do
   end
 
   def handle_in("loop:" <> event, %{"user_id" => user_id}, socket) do
+    update_presence(socket, user_id, event)
+
     broadcast! socket, "loop:#{event}", %{user_id: user_id}
 
     {:noreply, socket}
@@ -51,5 +51,17 @@ defmodule LoopsWithFriends.JamChannel do
     JamBalancer.remove_user(socket.assigns.jam_id, socket.assigns.user_id)
 
     msg
+  end
+
+  defp update_presence(socket, user_id, event) do
+    Presence.update(
+      socket,
+      user_id,
+      put_in(user_meta(socket, user_id)[:loop_event], event)
+    )
+  end
+
+  defp user_meta(socket, user_id) do
+    hd(Presence.list(socket)[user_id][:metas])
   end
 end
