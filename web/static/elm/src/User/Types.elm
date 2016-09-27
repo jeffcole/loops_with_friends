@@ -36,7 +36,7 @@ emptyCollection =
 
 emptyModel : Model
 emptyModel =
-  Loop.Types.initialModel "Empty Loop"
+  Loop.Types.initialModel ""
   |> Model "Empty User"
 
 

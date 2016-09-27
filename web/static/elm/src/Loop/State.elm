@@ -8,7 +8,7 @@ import WebAudio
 import Loop.Types exposing (..)
 
 
-initialState : String -> String -> (Model, Cmd Msg)
+initialState : String -> Event -> (Model, Cmd Msg)
 initialState name event =
   ( initialModelFromEvent name event
   , performLoad name

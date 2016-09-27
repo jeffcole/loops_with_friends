@@ -4,7 +4,7 @@ module Presence.State exposing (updatePresenceState, updatePresenceDiff)
 import Debug
 import Dict
 import Json.Encode
-import Json.Decode as JD exposing ((:=))
+import Json.Decode as JD
 import Json.Decode.Pipeline as JDP
 
 import Phoenix.Presence exposing
@@ -18,6 +18,7 @@ import Phoenix.Presence exposing
 
 import Lib.Helpers
 import Loop.State
+import Loop.Types
 import User.State
 import User.Types
 
@@ -162,6 +163,23 @@ toUserAndCmds userPresence =
 userPresenceDecoder : JD.Decoder UserPresence
 userPresenceDecoder =
   JDP.decode UserPresence
-    |> JDP.required "user_id" JD.string
-    |> JDP.required "loop_name" JD.string
-    |> JDP.optional "loop_event" JD.string "none"
+  |> JDP.required "user_id" JD.string
+  |> JDP.required "loop_name" JD.string
+  |> JDP.optional
+       "loop_event"
+       (JD.string `JD.andThen` loopEventDecoder)
+       Loop.Types.NoEvent
+
+
+loopEventDecoder : String -> JD.Decoder Loop.Types.Event
+loopEventDecoder event =
+  JD.succeed (loopEvent event)
+
+
+loopEvent : String -> Loop.Types.Event
+loopEvent event =
+  case event of
+    "played" ->
+      Loop.Types.Play
+    _ ->
+      Loop.Types.NoEvent

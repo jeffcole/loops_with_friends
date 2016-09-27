@@ -37,6 +37,11 @@ type OutMsg
   | NoMsg
 
 
+type Event
+  = Play
+  | NoEvent
+
+
 initialModel : String -> Model
 initialModel name =
   { name = name
@@ -45,7 +50,7 @@ initialModel name =
   }
 
 
-initialModelFromEvent : String -> String -> Model
+initialModelFromEvent : String -> Event -> Model
 initialModelFromEvent name event =
   let
     model = initialModel name
@@ -53,10 +58,10 @@ initialModelFromEvent name event =
     { model | state = stateFromEvent event }
 
 
-stateFromEvent : String -> State
+stateFromEvent : Event -> State
 stateFromEvent event =
   case event of
-    "played" ->
+    Play ->
       Queued
     _ ->
       NotPlaying
