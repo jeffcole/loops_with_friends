@@ -3,23 +3,25 @@ defmodule LoopsWithFriends.LoopCyclerTest do
 
   alias LoopsWithFriends.LoopCycler
 
-  setup do
-    LoopCycler.start_link(name: __MODULE__)
-
-    {:ok, next_loop: fn -> LoopCycler.next_loop(__MODULE__) end}
+  describe "`next_loop/1` given an empty list" do
+    test "returns the first loop" do
+      assert LoopCycler.next_loop([]) == "80s_Back_Beat"
+    end
   end
 
-  describe "`next_loop/0`" do
-    # TODO This needs to be made jam-aware.
-    test "cycles the loop list", %{next_loop: next_loop} do
-      assert next_loop.() == "80s_Back_Beat"
-      assert next_loop.() == "Amsterdam_Layers"
-      assert next_loop.() == "Synthetic_String_Bass"
-      assert next_loop.() == "Degenerating_Pitch_Vox"
-      assert next_loop.() == "Kyoto_Night_Guitar"
-      assert next_loop.() == "Conga_Groove"
-      assert next_loop.() == "African_Rain_Caxixi"
-      assert next_loop.() == "80s_Back_Beat"
+  describe "`next_loop/1` given a list of loops" do
+    test "returns a loop not present in the given list" do
+      loops = ["80s_Back_Beat", "Amsterdam_Layers", "Degenerating_Pitch_Vox"]
+
+      assert LoopCycler.next_loop(loops) == "Synthetic_String_Bass"
+    end
+  end
+
+  describe "`next_loop/1` given a list containing all loops" do
+    test "raises an error" do
+      assert_raise LoopCycler.NoRemainingLoopsError, fn ->
+        LoopCycler.next_loop(LoopCycler.all_loops())
+      end
     end
   end
 end

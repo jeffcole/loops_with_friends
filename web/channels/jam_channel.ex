@@ -20,7 +20,7 @@ defmodule LoopsWithFriends.JamChannel do
   def handle_info(:after_join, socket) do
     Presence.track(socket, socket.assigns.user_id, %{
       user_id: socket.assigns.user_id,
-      loop_name: LoopCycler.next_loop
+      loop_name: LoopCycler.next_loop(present_loops(socket))
     })
 
     presence_list = Presence.list(socket)
@@ -63,5 +63,11 @@ defmodule LoopsWithFriends.JamChannel do
 
   defp user_meta(socket, user_id) do
     hd(Presence.list(socket)[user_id][:metas])
+  end
+
+  defp present_loops(socket) do
+    socket
+    |> Presence.list
+    |> Presence.extract_loops
   end
 end

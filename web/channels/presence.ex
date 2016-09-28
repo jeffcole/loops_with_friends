@@ -74,4 +74,12 @@ defmodule LoopsWithFriends.Presence do
   """
   use Phoenix.Presence, otp_app: :loops_with_friends,
                         pubsub_server: LoopsWithFriends.PubSub
+
+  def extract_loops(presences) when presences == %{}, do: []
+  def extract_loops(presences) do
+    presences
+    |> Map.values
+    |> get_in([Access.all(), :metas, Access.all(), :loop_name])
+    |> Enum.map(&hd/1)
+  end
 end

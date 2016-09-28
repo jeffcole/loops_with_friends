@@ -1,9 +1,11 @@
 defmodule LoopsWithFriends.LoopCycler do
   @moduledoc """
-  Cycles loops.
+  Cycles loops while filtering out those already present.
   """
 
-  @name __MODULE__
+  defmodule NoRemainingLoopsError do
+    defexception message: "There are no loops remaining to return."
+  end
 
   @loops [
     "80s_Back_Beat",
@@ -15,15 +17,18 @@ defmodule LoopsWithFriends.LoopCycler do
     "African_Rain_Caxixi",
   ]
 
-  def start_link(opts \\ []) do
-    opts = Keyword.put_new(opts, :name, @name)
-
-    Agent.start_link(fn -> @loops end, opts)
+  def next_loop([]), do: hd(all_loops())
+  def next_loop(present_loops) do
+    next_loop_or_nil(present_loops) || raise(NoRemainingLoopsError)
   end
 
-  def next_loop(agent \\ @name) do
-    Agent.get_and_update agent, fn [head | tail] ->
-      {head, tail ++ [head]}
-    end
+  def all_loops do
+    @loops
+  end
+
+  defp next_loop_or_nil(present_loops) do
+    all_loops()
+    |> Enum.reject(fn loop -> loop in present_loops end)
+    |> List.first
   end
 end

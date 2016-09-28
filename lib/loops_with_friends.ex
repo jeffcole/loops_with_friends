@@ -18,7 +18,6 @@ defmodule LoopsWithFriends do
       # Start the Ecto repository
       supervisor(LoopsWithFriends.Repo, []),
       supervisor(LoopsWithFriends.Presence, []),
-      worker(LoopsWithFriends.LoopCycler, []),
       worker(LoopsWithFriends.JamBalancer, []),
     ]
 
