@@ -1,11 +1,11 @@
-defmodule LoopsWithFriends.JamBalancerTest do
+defmodule LoopsWithFriends.JamBalancer.ServerTest do
   use ExUnit.Case, async: true
 
-  alias LoopsWithFriends.JamBalancer
+  alias LoopsWithFriends.JamBalancer.Server
 
   setup do
-    JamBalancer.start_link(name: __MODULE__)
-    current_jam = fn -> JamBalancer.current_jam(__MODULE__) end
+    Server.start_link(name: __MODULE__)
+    current_jam = fn -> Server.current_jam(__MODULE__) end
 
     {:ok, current_jam: current_jam}
   end
@@ -58,15 +58,15 @@ defmodule LoopsWithFriends.JamBalancerTest do
   end
 
   defp refresh_with_one_user(jam) do
-    JamBalancer.refresh(__MODULE__, jam, one_user())
+    Server.refresh(__MODULE__, jam, one_user())
   end
 
   defp refresh_with_seven_users(jam) do
-    JamBalancer.refresh(__MODULE__, jam, seven_users())
+    Server.refresh(__MODULE__, jam, seven_users())
   end
 
   defp remove_user(jam) do
-    JamBalancer.remove_user(__MODULE__, jam, "user-3")
+    Server.remove_user(__MODULE__, jam, "user-3")
   end
 
   defp one_user do

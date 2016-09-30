@@ -15,3 +15,5 @@ config :loops_with_friends, LoopsWithFriends.Repo,
   database: "loops_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :loops_with_friends, :jam_balancer, LoopsWithFriends.JamBalancer.Stub

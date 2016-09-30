@@ -18,7 +18,7 @@ defmodule LoopsWithFriends do
       # Start the Ecto repository
       supervisor(LoopsWithFriends.Repo, []),
       supervisor(LoopsWithFriends.Presence, []),
-      worker(LoopsWithFriends.JamBalancer, []),
+      worker(Application.get_env(:loops_with_friends, :jam_balancer), []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

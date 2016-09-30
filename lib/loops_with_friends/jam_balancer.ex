@@ -1,35 +1,19 @@
 defmodule LoopsWithFriends.JamBalancer do
   @moduledoc """
-  Provides a stateful API for a `JamCollection`.
+  Behavior for maintaining and balancing among a collection of jams.
   """
 
-  alias LoopsWithFriends.JamCollection
+  @callback start_link(opts :: Keyword.t) :: Agent.on_start
 
-  @name __MODULE__
+  @callback refresh(agent :: module, jam_id :: String.t, presence_map :: Map.t)
+            :: Map.t
 
-  def start_link(opts \\ []) do
-    opts = Keyword.put_new(opts, :name, @name)
+  @callback current_jam(agent :: module) :: String.t
 
-    Agent.start_link(fn -> JamCollection.new() end, opts)
-  end
-
-  def refresh(agent \\ @name, jam_id, presence_map) do
-    Agent.update agent, fn jams ->
-      JamCollection.refresh(jams, jam_id, Map.keys(presence_map))
-    end
-  end
-
-  def current_jam(agent \\ @name) do
-    JamCollection.most_populated_with_capacity(jams(agent))
-  end
-
-  def remove_user(agent \\ @name, jam_id, user_id) do
-    Agent.update agent, fn jams ->
-      JamCollection.remove_user(jams, jam_id, user_id)
-    end
-  end
-
-  defp jams(agent) do
-    Agent.get(agent, &(&1))
-  end
+  @callback remove_user(
+              agent :: module,
+              jam_id :: String.t, 
+              user_id :: String.t
+            )
+            :: Map.t
 end

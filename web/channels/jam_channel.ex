@@ -5,7 +5,9 @@ defmodule LoopsWithFriends.JamChannel do
 
   use LoopsWithFriends.Web, :channel
 
-  alias LoopsWithFriends.{JamBalancer, LoopCycler, Presence}
+  alias LoopsWithFriends.{LoopCycler, Presence}
+
+  @jam_balancer Application.get_env(:loops_with_friends, :jam_balancer)
 
   intercept ["loop:played", "loop:stopped"]
 
@@ -24,7 +26,7 @@ defmodule LoopsWithFriends.JamChannel do
     })
 
     presence_list = Presence.list(socket)
-    JamBalancer.refresh(socket.assigns.jam_id, presence_list)
+    @jam_balancer.refresh(socket.assigns.jam_id, presence_list)
 
     push socket, "presence_state", presence_list
 
@@ -48,7 +50,7 @@ defmodule LoopsWithFriends.JamChannel do
   end
 
   def terminate(msg, socket) do
-    JamBalancer.remove_user(socket.assigns.jam_id, socket.assigns.user_id)
+    @jam_balancer.remove_user(socket.assigns.jam_id, socket.assigns.user_id)
 
     msg
   end
