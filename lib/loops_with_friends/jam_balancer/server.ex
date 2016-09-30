@@ -5,29 +5,33 @@ defmodule LoopsWithFriends.JamBalancer.Server do
 
   @behaviour LoopsWithFriends.JamBalancer
 
-  alias LoopsWithFriends.JamCollection
+  @jam_collection Application.get_env(:loops_with_friends, :jam_collection)
 
   @name __MODULE__
 
   def start_link(opts \\ []) do
     opts = Keyword.put_new(opts, :name, @name)
 
-    Agent.start_link(fn -> JamCollection.new() end, opts)
+    Agent.start_link(fn -> @jam_collection.new(opts) end, opts)
   end
 
-  def refresh(agent \\ @name, jam_id, presence_map) do
+  def refresh(agent \\ @name, jam_id, presence_map, opts \\ []) do
     Agent.update agent, fn jams ->
-      JamCollection.refresh(jams, jam_id, Map.keys(presence_map))
+      @jam_collection.refresh(jams, jam_id, Map.keys(presence_map), opts)
     end
   end
 
   def current_jam(agent \\ @name) do
-    JamCollection.most_populated_with_capacity(jams(agent))
+    @jam_collection.most_populated_with_capacity(jams(agent))
   end
 
-  def remove_user(agent \\ @name, jam_id, user_id) do
+  def jam_full?(agent \\ @name, jam_id) do
+    @jam_collection.jam_full?(jams(agent), jam_id)
+  end
+
+  def remove_user(agent \\ @name, jam_id, user_id, opts \\ []) do
     Agent.update agent, fn jams ->
-      JamCollection.remove_user(jams, jam_id, user_id)
+      @jam_collection.remove_user(jams, jam_id, user_id, opts)
     end
   end
 

@@ -17,3 +17,6 @@ config :loops_with_friends, LoopsWithFriends.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :loops_with_friends, :jam_balancer, LoopsWithFriends.JamBalancer.Stub
+
+config :loops_with_friends, :jam_collection,
+  LoopsWithFriends.JamCollection.Stub

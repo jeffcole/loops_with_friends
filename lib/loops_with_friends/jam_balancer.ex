@@ -10,9 +10,11 @@ defmodule LoopsWithFriends.JamBalancer do
 
   @callback current_jam(agent :: module) :: String.t
 
+  @callback jam_full?(jam_id :: String.t) :: boolean
+
   @callback remove_user(
               agent :: module,
-              jam_id :: String.t, 
+              jam_id :: String.t,
               user_id :: String.t
             )
             :: Map.t

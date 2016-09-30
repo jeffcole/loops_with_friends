@@ -3,83 +3,74 @@ defmodule LoopsWithFriends.JamBalancer.ServerTest do
 
   alias LoopsWithFriends.JamBalancer.Server
 
-  setup do
-    Server.start_link(name: __MODULE__)
-    current_jam = fn -> Server.current_jam(__MODULE__) end
+  @name __MODULE__
 
-    {:ok, current_jam: current_jam}
-  end
+  describe "`start_link`" do
+    test "starts a new jam collection" do
+      result = Server.start_link(name: @name, caller: self())
 
-  describe "`current_jam/0` when there are no users" do
-    test "returns a UUID", %{current_jam: current_jam} do
-      assert UUID.info!(current_jam.())
+      assert {:ok, _pid} = result
+      assert_receive :called_jam_collection_new
     end
   end
 
-  describe "`current_jam/0` when the last jam has fewer than seven users" do
-    test "returns the last jam", %{current_jam: current_jam} do
-      initial_jam = current_jam.()
-      refresh_with_one_user(initial_jam)
+  describe "`refresh`" do
+    setup :start_server
 
-      assert current_jam.() == initial_jam
+    test "refreshes a jam with the keys of a map" do
+      result = Server.refresh(
+        @name,
+        "jam-1",
+        %{"user-1" => :data},
+        caller: self()
+      )
+
+      assert :ok = result
+      assert_receive :called_jam_collection_refresh
     end
   end
 
-  describe "`current_jam/0` when the last jam has seven users" do
-    test "returns a different jam", %{current_jam: current_jam} do
-      initial_jam = current_jam.()
-      refresh_with_seven_users(initial_jam)
+  describe "`current_jam`" do
+    setup :start_server
 
-      assert current_jam.() != initial_jam
+    test "queries the collection" do
+      Server.current_jam(@name)
+
+      assert_receive(
+        :called_jam_collection_most_populated_with_capacity
+      )
     end
   end
 
-  describe "`current_jam/0` after a user is removed from a full jam" do
-    test "returns that jam", %{current_jam: current_jam} do
-      initial_jam = current_jam.()
-      refresh_with_seven_users(initial_jam)
-      remove_user(initial_jam)
+  describe "`jam_full?`" do
+    setup :start_server
 
-      assert current_jam.() == initial_jam
+    test "asks the collection" do
+      Server.jam_full?(@name, "jam-1")
+
+      assert_receive :called_jam_collection_jam_full?
     end
   end
 
-  describe "`current_jam/0` when a previous jam has a user removed" do
-    test "returns the previous jam", %{current_jam: current_jam} do
-      initial_jam = current_jam.()
-      refresh_with_seven_users(initial_jam)
+  describe "`remove_user`" do
+    setup :start_server
 
-      second_jam = current_jam.()
-      refresh_with_one_user(second_jam)
-      remove_user(initial_jam)
+    test "delegates to the collection" do
+      result = Server.remove_user(
+        @name,
+        "jam-1",
+        "user-1",
+        caller: self()
+      )
 
-      assert current_jam.() == initial_jam
+      assert :ok = result
+      assert_receive :called_jam_collection_remove_user
     end
   end
 
-  defp refresh_with_one_user(jam) do
-    Server.refresh(__MODULE__, jam, one_user())
-  end
+  defp start_server(context) do
+    Server.start_link(name: @name)
 
-  defp refresh_with_seven_users(jam) do
-    Server.refresh(__MODULE__, jam, seven_users())
-  end
-
-  defp remove_user(jam) do
-    Server.remove_user(__MODULE__, jam, "user-3")
-  end
-
-  defp one_user do
-    %{"user-1" => %{}}
-  end
-
-  defp seven_users do
-    %{"user-1" => %{},
-      "user-2" => %{},
-      "user-3" => %{},
-      "user-4" => %{},
-      "user-5" => %{},
-      "user-6" => %{},
-      "user-7" => %{}}
+    context
   end
 end

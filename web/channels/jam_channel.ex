@@ -12,11 +12,15 @@ defmodule LoopsWithFriends.JamChannel do
   intercept ["loop:played", "loop:stopped"]
 
   def join("jams:" <> jam_id, _params, socket) do
-    send self(), :after_join
+    if !@jam_balancer.jam_full?(jam_id) do
+      send self(), :after_join
 
-    {:ok,
-     %{user_id: socket.assigns.user_id},
-     assign(socket, :jam_id, jam_id)}
+      {:ok,
+       %{user_id: socket.assigns.user_id},
+       assign(socket, :jam_id, jam_id)}
+    else
+      {:error, %{new_topic: "jams:#{@jam_balancer.current_jam}"}}
+    end
   end
 
   def handle_info(:after_join, socket) do

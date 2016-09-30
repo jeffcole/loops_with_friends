@@ -1,18 +1,18 @@
-defmodule LoopsWithFriends.JamCollectionTest do
+defmodule LoopsWithFriends.JamCollection.CollectionTest do
   use ExUnit.Case, async: true
 
-  alias LoopsWithFriends.JamCollection
+  alias LoopsWithFriends.JamCollection.Collection
 
   describe "`new/0`" do
     test "returns an empty map" do
-      assert JamCollection.new() == %{}
+      assert Collection.new() == %{}
     end
   end
 
   describe "`refresh/3`" do
     test "places the given users in the jam with the given id" do
-      collection = JamCollection.refresh(
-        JamCollection.new(),
+      collection = Collection.refresh(
+        Collection.new(),
         "jam-1",
         ["user-1"]
       )
@@ -22,7 +22,7 @@ defmodule LoopsWithFriends.JamCollectionTest do
 
     test "replaces the contents of the given jam" do
       collection = %{"jam-1" => ["user-1"]}
-      refreshed_collection = JamCollection.refresh(
+      refreshed_collection = Collection.refresh(
         collection,
         "jam-1",
         ["user-2"]
@@ -34,12 +34,12 @@ defmodule LoopsWithFriends.JamCollectionTest do
 
   describe "`most_populated_with_capacity/1`" do
     test "given an empty collection returns a UUID" do
-      assert UUID.info!(JamCollection.most_populated_with_capacity(%{}))
+      assert UUID.info!(Collection.most_populated_with_capacity(%{}))
     end
 
     test "given a full jam returns a new jam" do
       jams = %{"jam-1" => list_of_seven_users()}
-      result = JamCollection.most_populated_with_capacity(jams)
+      result = Collection.most_populated_with_capacity(jams)
 
       assert result != "jam-1"
     end
@@ -52,9 +52,29 @@ defmodule LoopsWithFriends.JamCollectionTest do
         "jam-3" => list_of_seven_users(),
         "jam-4" => list_of_seven_users()
       }
-      result = JamCollection.most_populated_with_capacity(jams)
+      result = Collection.most_populated_with_capacity(jams)
 
       assert result == "jam-2"
+    end
+  end
+
+  describe "`jam_full?/2`" do
+    test "given a jam that hasn't been populated yet is falsy" do
+      jams = %{}
+
+      refute Collection.jam_full?(jams, "jam-1")
+    end
+
+    test "given a not full jam is falsy " do
+      jams = %{"jam-1" => list_of_six_users()}
+
+      refute Collection.jam_full?(jams, "jam-1")
+    end
+
+    test "given a full jam is truthy " do
+      jams = %{"jam-1" => list_of_seven_users()}
+
+      assert Collection.jam_full?(jams, "jam-1")
     end
   end
 
@@ -62,7 +82,7 @@ defmodule LoopsWithFriends.JamCollectionTest do
     test "removes a user from a jam" do
       jams = %{"jam-1" => ["user-1", "user-2"], "jam-2" => ["user-1"]}
 
-      result = JamCollection.remove_user(jams, "jam-1", "user-1")
+      result = Collection.remove_user(jams, "jam-1", "user-1")
 
       assert result == %{"jam-1" => ["user-2"], "jam-2" => ["user-1"]}
     end
@@ -70,7 +90,7 @@ defmodule LoopsWithFriends.JamCollectionTest do
     test "removes a jam when its last user is removed" do
       jams = %{"jam-1" => ["user-1"], "jam-2" => ["user-1"]}
 
-      result = JamCollection.remove_user(jams, "jam-1", "user-1")
+      result = Collection.remove_user(jams, "jam-1", "user-1")
 
       assert result == %{"jam-2" => ["user-1"]}
     end
