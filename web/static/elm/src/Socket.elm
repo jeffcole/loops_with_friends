@@ -1,12 +1,15 @@
-module Socket exposing (joinChannel, pushUserMsg, decodeUserId)
+module Socket exposing (joinChannel, pushUserMsg, decodeUserId, pathToHost)
 
 
+import Erl
+import Debug
 import Dict
 import Json.Decode as JD exposing ((:=))
 import Json.Encode as JE
 import Phoenix.Channel
 import Phoenix.Push
 import Phoenix.Socket
+import String
 
 import Loop.Types
 import User.Types
@@ -48,11 +51,24 @@ decodeUserId json =
     Err message -> ""
 
 
+pathToHost : String -> String
+pathToHost path =
+  let
+    url = Erl.parse path
+    host = url.host |> String.join "."
+    port' = url.port'
+  in
+    case port' of
+      0 -> host
+      _ -> String.join ":" [host, toString port']
+
+
 channel : String -> Phoenix.Channel.Channel Msg
 channel topic =
   Phoenix.Channel.init topic
   |> Phoenix.Channel.withPayload userParams
   |> Phoenix.Channel.onJoin setUserId
+  |> Phoenix.Channel.onError retryJoin
 
 
 initialSocket : String -> String -> Phoenix.Socket.Socket Msg
@@ -73,6 +89,24 @@ userParams =
 setUserId : JE.Value -> Msg
 setUserId json =
   SetUserId (decodeUserId json)
+
+
+retryJoin : JE.Value -> Msg
+retryJoin json =
+  let
+    newTopic = decodeNewTopic json
+  in
+    case newTopic of
+      "" -> NoOp
+      _ ->
+        RetryJoin newTopic
+
+
+decodeNewTopic : JE.Value -> String
+decodeNewTopic json =
+  case JD.decodeValue ("new_topic" := JD.string) json of
+    Ok newTopic -> newTopic
+    Err message -> ""
 
 
 socketUrl : String -> String

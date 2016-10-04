@@ -35,8 +35,18 @@ initialState flags =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    SetUserId id ->
-      { model | userId = id } ! []
+    SetUserId userId ->
+      { model | userId = userId } ! []
+
+    RetryJoin newTopic ->
+      let
+        {path} = model.socket
+        host = Socket.pathToHost path
+        (socket, socketCmds) = Socket.joinChannel host newTopic
+      in
+        ( { model | socket = socket }
+        , Cmd.map SocketMsg socketCmds
+        )
 
     Play ->
       let
@@ -92,7 +102,6 @@ update msg model =
 
     MeasureStart time ->
       let
-        _ = Debug.log "MeasureStart" time
         (users, cmds) = User.State.playQueuedLoops model.users
       in
         ( { model | users = users }
@@ -124,6 +133,9 @@ update msg model =
         ( { model | users = users, presences = presences }
         , Cmd.batch (List.map Helpers.tagUserCmds cmds)
         )
+
+    NoOp ->
+      (model, Cmd.none)
 
 
 subscriptions : Model -> Sub Msg

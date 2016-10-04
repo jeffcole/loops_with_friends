@@ -40,10 +40,7 @@ updatePresenceState presences json =
       in
         (users, newPresenceState, cmds)
     Err error ->
-      let
-        _ = Debug.log "Error" error
-      in
-        (User.Types.emptyCollection, presences, [User.Types.emptyLoopCmd])
+      (User.Types.emptyCollection, presences, [User.Types.emptyLoopCmd])
 
 
 updatePresenceDiff
@@ -62,10 +59,7 @@ updatePresenceDiff users presences json =
       in
         (users, newPresenceState, cmds)
     Err error ->
-      let
-        _ = Debug.log "Error" error
-      in
-        (User.Types.emptyCollection, presences, [User.Types.emptyLoopCmd])
+      (User.Types.emptyCollection, presences, [User.Types.emptyLoopCmd])
 
 
 decodePresenceState

@@ -19,7 +19,8 @@ type alias Model =
 
 
 type Msg
-  = SetUserId String
+  = SetUserId User.Types.ID
+  | RetryJoin String
   | Play
   | Stop
   | MeasureStart Time
@@ -29,3 +30,4 @@ type Msg
   | SocketMsg (Phoenix.Socket.Msg Msg)
   | PresenceStateMsg JE.Value
   | PresenceDiffMsg JE.Value
+  | NoOp
