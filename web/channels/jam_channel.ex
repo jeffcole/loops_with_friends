@@ -13,6 +13,13 @@ defmodule LoopsWithFriends.JamChannel do
 
   def join("jams:" <> jam_id, _params, socket) do
     if !@jam_balancer.jam_full?(jam_id) do
+      Presence.track(socket, socket.assigns.user_id, %{
+        user_id: socket.assigns.user_id,
+        loop_name: LoopCycler.next_loop(present_loops(socket))
+      })
+
+      @jam_balancer.refresh(jam_id, Presence.list(socket))
+
       send self(), :after_join
 
       {:ok,
@@ -24,15 +31,7 @@ defmodule LoopsWithFriends.JamChannel do
   end
 
   def handle_info(:after_join, socket) do
-    Presence.track(socket, socket.assigns.user_id, %{
-      user_id: socket.assigns.user_id,
-      loop_name: LoopCycler.next_loop(present_loops(socket))
-    })
-
-    presence_list = Presence.list(socket)
-    @jam_balancer.refresh(socket.assigns.jam_id, presence_list)
-
-    push socket, "presence_state", presence_list
+    push socket, "presence_state", Presence.list(socket)
 
     {:noreply, socket}
   end
