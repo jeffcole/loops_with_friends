@@ -22,7 +22,7 @@ defmodule LoopsWithFriends.JamBalancer.Server do
   end
 
   def current_jam(agent \\ @name) do
-    @jam_collection.most_populated_with_capacity(jams(agent))
+    @jam_collection.most_populated_jam_with_capacity_or_new(jams(agent))
   end
 
   def jam_full?(agent \\ @name, jam_id) do

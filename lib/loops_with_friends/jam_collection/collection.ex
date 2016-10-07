@@ -16,8 +16,8 @@ defmodule LoopsWithFriends.JamCollection.Collection do
     put_in jams[jam_id], users
   end
 
-  def most_populated_with_capacity(jams) when jams == %{}, do: uuid()
-  def most_populated_with_capacity(jams) do
+  def most_populated_jam_with_capacity_or_new(jams) when jams == %{}, do: uuid()
+  def most_populated_jam_with_capacity_or_new(jams) do
     jam_with_most_users_under_max(jams) || uuid()
   end
 

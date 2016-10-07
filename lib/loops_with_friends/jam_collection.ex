@@ -8,7 +8,7 @@ defmodule LoopsWithFriends.JamCollection do
   @callback refresh(jams :: Map, jam_id :: String.t, [String.t])
             :: Agent.on_start
 
-  @callback most_populated_with_capacity(jams :: Map) :: String.t
+  @callback most_populated_jam_with_capacity_or_new(jams :: Map) :: String.t
 
   @callback jam_full?(jams :: Map, jam_id :: String.t) :: boolean
 

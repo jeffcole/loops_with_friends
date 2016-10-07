@@ -37,7 +37,7 @@ defmodule LoopsWithFriends.JamBalancer.ServerTest do
       Server.current_jam(@name)
 
       assert_receive(
-        :called_jam_collection_most_populated_with_capacity
+        :called_jam_collection_most_populated_jam_with_capacity_or_new
       )
     end
   end

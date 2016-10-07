@@ -18,8 +18,8 @@ defmodule LoopsWithFriends.JamCollection.Stub do
     send opts[:caller], :called_jam_collection_refresh
   end
 
-  def most_populated_with_capacity(_jams) do
-    send self(), :called_jam_collection_most_populated_with_capacity
+  def most_populated_jam_with_capacity_or_new(_jams) do
+    send self(), :called_jam_collection_most_populated_jam_with_capacity_or_new
   end
 
   def jam_full?(jams, _jam_id) when jams == %{} do

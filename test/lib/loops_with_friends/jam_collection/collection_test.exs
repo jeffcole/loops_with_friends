@@ -32,14 +32,14 @@ defmodule LoopsWithFriends.JamCollection.CollectionTest do
     end
   end
 
-  describe "`most_populated_with_capacity/1`" do
+  describe "`most_populated_jam_with_capacity_or_new/1`" do
     test "given an empty collection returns a UUID" do
-      assert UUID.info!(Collection.most_populated_with_capacity(%{}))
+      assert UUID.info!(Collection.most_populated_jam_with_capacity_or_new(%{}))
     end
 
     test "given a full jam returns a new jam" do
       jams = %{"jam-1" => list_of_seven_users()}
-      result = Collection.most_populated_with_capacity(jams)
+      result = Collection.most_populated_jam_with_capacity_or_new(jams)
 
       assert result != "jam-1"
     end
@@ -52,7 +52,7 @@ defmodule LoopsWithFriends.JamCollection.CollectionTest do
         "jam-3" => list_of_seven_users(),
         "jam-4" => list_of_seven_users()
       }
-      result = Collection.most_populated_with_capacity(jams)
+      result = Collection.most_populated_jam_with_capacity_or_new(jams)
 
       assert result == "jam-2"
     end
