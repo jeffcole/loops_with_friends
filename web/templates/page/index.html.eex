@@ -1,10 +1,8 @@
-<script type="text/javascript">
-
+<script>
   document.addEventListener("DOMContentLoaded", function (event) {
     var elmApp = Elm.App.fullscreen({
       host: document.location.host,
-      topic: "jams:<%= Application.get_env(:loops_with_friends, :jam_balancer).current_jam %>"
+      topic: "jams:<%= current_jam %>"
     });
   });
-
 </script>
