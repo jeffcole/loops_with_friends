@@ -12,7 +12,7 @@ defmodule LoopsWithFriends.JamChannel do
   intercept ["loop:played", "loop:stopped"]
 
   def join("jams:" <> jam_id, _params, socket) do
-    if !@jam_balancer.jam_full?(jam_id) do
+    if @jam_balancer.jam_capacity?(jam_id) do
       Presence.track(socket, socket.assigns.user_id, %{
         user_id: socket.assigns.user_id,
         loop_name: LoopCycler.next_loop(present_loops(socket))

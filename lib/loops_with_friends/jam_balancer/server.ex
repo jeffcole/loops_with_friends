@@ -25,8 +25,8 @@ defmodule LoopsWithFriends.JamBalancer.Server do
     @jam_collection.most_populated_jam_with_capacity_or_new(jams(agent))
   end
 
-  def jam_full?(agent \\ @name, jam_id) do
-    @jam_collection.jam_full?(jams(agent), jam_id)
+  def jam_capacity?(agent \\ @name, jam_id) do
+    @jam_collection.jam_capacity?(jams(agent), jam_id)
   end
 
   def remove_user(agent \\ @name, jam_id, user_id, opts \\ []) do

@@ -19,9 +19,9 @@ defmodule LoopsWithFriends.JamBalancer.Stub do
     "jam-1"
   end
 
-  def jam_full?(_agent \\ @name, jam_id)
-  def jam_full?(_agent, "jam-1"), do: false
-  def jam_full?(_agent, "full-jam"), do: true
+  def jam_capacity?(_agent \\ @name, jam_id)
+  def jam_capacity?(_agent, "jam-1"), do: true
+  def jam_capacity?(_agent, "full-jam"), do: false
 
   def remove_user(_agent \\ @name, _jam_id, _user_id) do
     %{}

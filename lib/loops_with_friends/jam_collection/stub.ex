@@ -22,8 +22,8 @@ defmodule LoopsWithFriends.JamCollection.Stub do
     send self(), :called_jam_collection_most_populated_jam_with_capacity_or_new
   end
 
-  def jam_full?(jams, _jam_id) when jams == %{} do
-    send self(), :called_jam_collection_jam_full?
+  def jam_capacity?(jams, _jam_id) when jams == %{} do
+    send self(), :called_jam_collection_jam_capacity?
   end
 
   def remove_user(_jams, _jam_id, _user_id, opts \\ []) do

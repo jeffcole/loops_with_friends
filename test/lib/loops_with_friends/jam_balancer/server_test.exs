@@ -42,13 +42,13 @@ defmodule LoopsWithFriends.JamBalancer.ServerTest do
     end
   end
 
-  describe "`jam_full?`" do
+  describe "`jam_capacity?`" do
     setup :start_server
 
     test "asks the collection" do
-      Server.jam_full?(@name, "jam-1")
+      Server.jam_capacity?(@name, "jam-1")
 
-      assert_receive :called_jam_collection_jam_full?
+      assert_receive :called_jam_collection_jam_capacity?
     end
   end
 

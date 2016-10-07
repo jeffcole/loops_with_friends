@@ -21,9 +21,11 @@ defmodule LoopsWithFriends.JamCollection.Collection do
     jam_with_most_users_under_max(jams) || uuid()
   end
 
-  def jam_full?(jams, jam_id) do
+  def jam_capacity?(jams, jam_id) do
     if users = jams[jam_id] do
-      Enum.count(users) == @max_users
+      Enum.count(users) < @max_users
+    else
+      true
     end
   end
 

@@ -10,7 +10,7 @@ defmodule LoopsWithFriends.JamCollection do
 
   @callback most_populated_jam_with_capacity_or_new(jams :: Map) :: String.t
 
-  @callback jam_full?(jams :: Map, jam_id :: String.t) :: boolean
+  @callback jam_capacity?(jams :: Map, jam_id :: String.t) :: boolean
 
   @callback remove_user(jams :: Map, jam_id :: String.t, user_id :: String.t)
             :: Map

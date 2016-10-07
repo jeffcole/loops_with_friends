@@ -58,23 +58,23 @@ defmodule LoopsWithFriends.JamCollection.CollectionTest do
     end
   end
 
-  describe "`jam_full?/2`" do
-    test "given a jam that hasn't been populated yet is falsy" do
+  describe "`jam_capacity?/2`" do
+    test "given a jam that hasn't been populated yet is truthy" do
       jams = %{}
 
-      refute Collection.jam_full?(jams, "jam-1")
+      assert Collection.jam_capacity?(jams, "jam-1")
     end
 
-    test "given a not full jam is falsy " do
+    test "given a not full jam is truthy " do
       jams = %{"jam-1" => list_of_six_users()}
 
-      refute Collection.jam_full?(jams, "jam-1")
+      assert Collection.jam_capacity?(jams, "jam-1")
     end
 
-    test "given a full jam is truthy " do
+    test "given a full jam is falsy " do
       jams = %{"jam-1" => list_of_seven_users()}
 
-      assert Collection.jam_full?(jams, "jam-1")
+      refute Collection.jam_capacity?(jams, "jam-1")
     end
   end
 
