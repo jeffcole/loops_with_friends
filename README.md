@@ -2,7 +2,14 @@
 
 [Loops With Friends] is a collaborative music-making web app built with [Elixir]/[Phoenix], [Elm], and the [WebAudio API].
 
-See these [blog][Back End Part I] [posts][Back End Part II] for more on how it's built.
+It supports up to seven users in a given "jam," in which each user gets their own music loop. Each user can start and stop their loop to make music in real time with the other users in the jam. The app automatically creates and balances additional jams as users join and leave.
+
+See these blog posts for more on how it's built.
+
+- [The Back End - Part I]
+- [The Back End - Part II]
+- [Healthy Elixir Tests]
+- More to come
 
 ## Development
 
@@ -47,6 +54,10 @@ See these [blog][Back End Part I] [posts][Back End Part II] for more on how it's
 
 Run the test suite with `mix test`.
 
+## Attribution
+
+The loops used by the app are [Apple Loops].
+
 ## License
 
 Copyright © 2016 Jeff Cole. See [LICENSE](LICENSE) for more information.
@@ -56,6 +67,8 @@ Copyright © 2016 Jeff Cole. See [LICENSE](LICENSE) for more information.
 [Phoenix]: http://www.phoenixframework.org/
 [Elm]: http://elm-lang.org/
 [WebAudio API]: https://webaudio.github.io/web-audio-api/
-[Back End Part I]: http://jeff-cole.com/blog/collaborative-music-loops-in-elixir-and-elm-the-back-end-part-1/
-[Back End Part II]: http://jeff-cole.com/blog/collaborative-music-loops-in-elixir-and-elm-the-back-end-part-2/
+[The Back End - Part I]: http://jeff-cole.com/collaborative-music-loops-in-elixir-and-elm-the-back-end-part-1/
+[The Back End - Part II]:  http://jeff-cole.com/collaborative-music-loops-in-elixir-and-elm-the-back-end-part-2/
+[Healthy Elixir Tests]: http://jeff-cole.com/collaborative-music-loops-in-elixir-and-elm-healthy-elixir-tests/
 [Install]: http://www.phoenixframework.org/docs/installation
+[Apple Loops]: https://support.apple.com/en-us/HT201808
