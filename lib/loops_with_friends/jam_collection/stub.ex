@@ -22,7 +22,7 @@ defmodule LoopsWithFriends.JamCollection.Stub do
     send self(), :called_jam_collection_most_populated_jam_with_capacity_or_new
   end
 
-  def jam_capacity?(jams, _jam_id) when jams == %{} do
+  def jam_capacity?(_jams, _jam_id) do
     send self(), :called_jam_collection_jam_capacity?
   end
 
