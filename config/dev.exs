@@ -36,6 +36,10 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :loops_with_friends, LoopsWithFriends.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "loops_dev",
+  database: "loops_with_friends_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :quantum, cron: [
+  "* * * * *": {LoopsWithFriends.Stats, :log}
+]

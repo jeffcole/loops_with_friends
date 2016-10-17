@@ -26,9 +26,9 @@ See these blog posts for more on how it's built.
   mix deps.get
   ```
 
-1. Create the database.
+1. Create and migrate the database.
   ```shell
-  mix ecto.create
+  mix ecto.create && mix ecto.migrate
   ```
 
 1. Install asset dependencies.

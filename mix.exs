@@ -27,7 +27,8 @@ defmodule LoopsWithFriends.Mixfile do
         :phoenix_ecto,
         :phoenix_html,
         :phoenix_pubsub,
-        :postgrex
+        :postgrex,
+        :quantum
       ]
     ]
   end
@@ -49,7 +50,8 @@ defmodule LoopsWithFriends.Mixfile do
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:phoenix_pubsub, "~> 1.0"},
-     {:postgrex, "~> 0.11.2"},
+     {:postgrex, "~> 0.12.0"},
+     {:quantum, ">= 1.8.0"},
      {:uuid, "~> 1.1" }]
   end
 

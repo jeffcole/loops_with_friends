@@ -12,7 +12,7 @@ config :logger, level: :warn
 # Configure your database
 config :loops_with_friends, LoopsWithFriends.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "loops_test",
+  database: "loops_with_friends_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 

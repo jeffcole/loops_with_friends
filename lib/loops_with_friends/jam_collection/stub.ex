@@ -31,4 +31,8 @@ defmodule LoopsWithFriends.JamCollection.Stub do
 
     send opts[:caller], :called_jam_collection_remove_user
   end
+
+  def stats(_jams) do
+    send self(), :called_jam_collection_stats
+  end
 end

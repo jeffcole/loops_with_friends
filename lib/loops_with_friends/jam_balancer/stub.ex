@@ -26,4 +26,15 @@ defmodule LoopsWithFriends.JamBalancer.Stub do
   def remove_user(_agent \\ @name, _jam_id, _user_id) do
     %{}
   end
+
+  def stats(_agent \\ @name) do
+    %{
+      jam_count: 2,
+      user_count: 3,
+      jams: %{
+        "jam-1" => %{user_count: 1},
+        "jam-2" => %{user_count: 2}
+      }
+    }
+  end
 end

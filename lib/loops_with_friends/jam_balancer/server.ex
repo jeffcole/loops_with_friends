@@ -35,6 +35,10 @@ defmodule LoopsWithFriends.JamBalancer.Server do
     end
   end
 
+  def stats(agent \\ @name) do
+    @jam_collection.stats(jams(agent))
+  end
+
   defp jams(agent) do
     Agent.get(agent, &(&1))
   end

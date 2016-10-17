@@ -65,3 +65,8 @@ config :loops_with_friends, LoopsWithFriends.Repo,
 # for the new static assets to be served after a hot upgrade:
 #
 #     config :loops_with_friends, LoopsWithFriends.Endpoint, root: "."
+
+config :quantum, cron: [
+  "30 * * * *": {LoopsWithFriends.Stats, :collect},
+  "* * * * *": {LoopsWithFriends.Stats, :log}
+]

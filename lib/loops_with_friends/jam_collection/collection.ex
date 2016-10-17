@@ -8,6 +8,8 @@ defmodule LoopsWithFriends.JamCollection.Collection do
 
   @behaviour LoopsWithFriends.JamCollection
 
+  alias LoopsWithFriends.StatsCollection
+
   @max_users 7
 
   def new(_opts \\ []), do: %{}
@@ -35,6 +37,11 @@ defmodule LoopsWithFriends.JamCollection.Collection do
       |> List.delete(user_id)
 
     update(jams, jam_id, users)
+  end
+
+  def stats(jams) do
+    jams
+    |> Enum.reduce(%StatsCollection{}, &accumulate_stats/2)
   end
 
   defp jam_with_most_users_under_max(jams) do
@@ -68,6 +75,14 @@ defmodule LoopsWithFriends.JamCollection.Collection do
 
   defp update(jams, jam_id, users) do
     put_in jams[jam_id], users
+  end
+
+  defp accumulate_stats({jam_id, users}, stats) do
+    %StatsCollection{
+      jam_count: stats.jam_count + 1,
+      user_count: stats.user_count + length(users),
+      jams: Map.merge(stats.jams, %{jam_id => %{user_count: length(users)}})
+    }
   end
 
   defp uuid do

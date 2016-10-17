@@ -33,7 +33,7 @@ defmodule LoopsWithFriends.JamBalancer.ServerTest do
   describe "`current_jam`" do
     setup :start_server
 
-    test "queries the collection" do
+    test "delegates to the collection" do
       Server.current_jam(@name)
 
       assert_receive(
@@ -45,7 +45,7 @@ defmodule LoopsWithFriends.JamBalancer.ServerTest do
   describe "`jam_capacity?`" do
     setup :start_server
 
-    test "asks the collection" do
+    test "delegates to the collection" do
       Server.jam_capacity?(@name, "jam-1")
 
       assert_receive :called_jam_collection_jam_capacity?
@@ -65,6 +65,16 @@ defmodule LoopsWithFriends.JamBalancer.ServerTest do
 
       assert :ok = result
       assert_receive :called_jam_collection_remove_user
+    end
+  end
+
+  describe "`stats`" do
+    setup :start_server
+
+    test "delegates to the collection" do
+      Server.stats(@name)
+
+      assert_receive :called_jam_collection_stats
     end
   end
 

@@ -1,7 +1,7 @@
 defmodule LoopsWithFriends.JamCollection.CollectionTest do
   use ExUnit.Case, async: true
 
-  alias LoopsWithFriends.JamCollection.Collection
+  alias LoopsWithFriends.{JamCollection.Collection, StatsCollection}
 
   describe "`new/0`" do
     test "returns an empty map" do
@@ -94,6 +94,29 @@ defmodule LoopsWithFriends.JamCollection.CollectionTest do
 
       assert result == %{"jam-2" => ["user-1"]}
     end
+  end
+
+  describe "`stats/0`" do
+    test "given an empty collection returns zero counts" do
+      assert Collection.stats(%{}) ==
+        %StatsCollection{jam_count: 0, user_count: 0, jams: %{}}
+    end
+
+    test "given a populated collection returns non-zero counts" do
+      result = Collection.stats(
+        %{"jam-1" => list_of_six_users, "jam-2" => list_of_seven_users}
+      )
+
+      assert result ==
+        %StatsCollection{
+          jam_count: 2,
+          user_count: 13,
+          jams: %{
+            "jam-1" => %{user_count: 6},
+            "jam-2" => %{user_count: 7}
+          }
+        }
+      end
   end
 
   defp list_of_seven_users do
