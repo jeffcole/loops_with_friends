@@ -17,9 +17,19 @@ defmodule LoopsWithFriends.Mixfile do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [mod: {LoopsWithFriends, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger,
-                    :gettext, :phoenix_ecto, :postgrex]]
+    [
+      mod: {LoopsWithFriends, []},
+      applications: [
+        :cowboy,
+        :gettext,
+        :logger,
+        :phoenix,
+        :phoenix_ecto,
+        :phoenix_html,
+        :phoenix_pubsub,
+        :postgrex
+      ]
+    ]
   end
 
   # Specifies which paths to compile per environment.
