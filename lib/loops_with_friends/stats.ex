@@ -21,9 +21,14 @@ defmodule LoopsWithFriends.Stats do
 
   def log do
     stats = @jam_balancer.stats
+    app_stats = Map.take(stats, [:jam_count, :user_count])
+    jam_stats = Map.take(stats, [:jams])
 
-    Logger.info("AppStats: #{inspect Map.take(stats, [:jam_count, :user_count])}")
-    Logger.info("JamStats: #{inspect Map.take(stats, [:jams])}")
+    Logger.info("AppStats: #{inspect app_stats}")
+    Logger.info("JamStats: #{inspect jam_stats}")
+
+    Apex.ap(app_stats)
+    Apex.ap(jam_stats)
   end
 
   defp jam_stats(jams, app_stat_id) do

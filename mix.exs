@@ -41,7 +41,8 @@ defmodule LoopsWithFriends.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:cowboy, "~> 1.0"},
+    [{:apex, "~>0.5.2"},
+     {:cowboy, "~> 1.0"},
      {:credo, "~> 0.4", only: [:dev, :test]},
      {:gettext, "~> 0.9"},
      {:mix_test_watch, "~> 0.2", only: :dev},
