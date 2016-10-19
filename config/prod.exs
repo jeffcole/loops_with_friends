@@ -23,7 +23,7 @@ config :logger, level: :info
 config :loops_with_friends, LoopsWithFriends.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
-  pool_size: 20
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
 # ## SSL Support
 #
