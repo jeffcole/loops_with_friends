@@ -18,10 +18,8 @@ defmodule LoopsWithFriends.LoopCyclerTest do
   end
 
   describe "`next_loop/1` given a list containing all loops" do
-    test "raises an error" do
-      assert_raise LoopCycler.NoRemainingLoopsError, fn ->
-        LoopCycler.next_loop(LoopCycler.all_loops())
-      end
+    test "returns `nil`" do
+      assert LoopCycler.next_loop(LoopCycler.all_loops()) == nil
     end
   end
 end

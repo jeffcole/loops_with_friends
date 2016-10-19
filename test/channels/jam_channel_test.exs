@@ -38,6 +38,19 @@ defmodule LoopsWithFriends.JamChannelTest do
     end
   end
 
+  # To test this, we would need to populate the presence, which I don't know
+  # how to do from tests.
+  @tag :skip
+  describe "`join` when all loops are present" do
+    test "returns an error and a new jam", %{socket: socket} do
+      join_response = subscribe_and_join(socket, "jams:jam-1", %{})
+
+      assert {:error, reply} = join_response
+      assert %{new_topic: topic} = reply
+      assert topic != "jams:jam-1"
+    end
+  end
+
   describe "`handle_in` given a loop event" do
     test "broadcasts the event", %{socket: socket} do
       socket = subscribe_and_join!(socket, "jams:jam-1", %{})
