@@ -67,6 +67,6 @@ config :loops_with_friends, LoopsWithFriends.Repo,
 #     config :loops_with_friends, LoopsWithFriends.Endpoint, root: "."
 
 config :quantum, cron: [
-  "30 * * * *": {LoopsWithFriends.Stats, :collect},
+  "0,30 * * * *": {LoopsWithFriends.Stats, :collect},
   "* * * * *": {LoopsWithFriends.Stats, :log}
 ]
