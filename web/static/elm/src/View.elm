@@ -30,9 +30,13 @@ root model =
 
 usersView : User.Types.Collection -> Html Msg
 usersView users =
-  section []
-    [ h2 [] [ text "Other Players' Loops" ]
-    , ul [ class "grid-items" ]
-        <| [ li [ class "grid-item placeholder" ] [] ]
-        ++ (Dict.values users |> List.map User.View.root)
-    ]
+  if Dict.isEmpty users then
+    h2 []
+      [ text "There's no one else here right now. Tell your friends to join!" ]
+  else
+    section []
+      [ h2 [] [ text "Other Players' Loops" ]
+      , ul [ class "grid-items" ]
+          <| [ li [ class "grid-item placeholder" ] [] ]
+          ++ (Dict.values users |> List.map User.View.root)
+      ]
