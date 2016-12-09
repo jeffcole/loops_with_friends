@@ -53,6 +53,7 @@ defmodule LoopsWithFriends.Mixfile do
      {:phoenix_pubsub, "~> 1.0"},
      {:postgrex, "~> 0.12.0"},
      {:quantum, ">= 1.8.0"},
+     {:quick_alias, "~> 0.1.0"},
      {:uuid, "~> 1.1" }]
   end
 
