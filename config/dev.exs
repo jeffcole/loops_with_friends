@@ -40,6 +40,6 @@ config :loops_with_friends, LoopsWithFriends.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :quantum, cron: [
-  "* * * * *": {LoopsWithFriends.Stats, :log}
-]
+# config :quantum, cron: [
+#   "* * * * *": {LoopsWithFriends.Stats, :log}
+# ]
