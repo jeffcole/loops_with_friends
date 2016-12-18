@@ -1,8 +1,8 @@
 {-
-  This file is borrowed from
-  https://github.com/knewter/elm-phoenix-socket/blob/feature/add_presence_support_and_test/src/Phoenix/Presence.elm
-  until if/when https://github.com/fbonetti/elm-phoenix-socket/pull/16
-  is merged.
+   This file is borrowed from
+   https://github.com/knewter/elm-phoenix-socket/blob/feature/add_presence_support_and_test/src/Phoenix/Presence.elm
+   until if/when https://github.com/fbonetti/elm-phoenix-socket/pull/16
+   is merged.
 -}
 
 
@@ -20,9 +20,8 @@ module Phoenix.Presence
         , list
         )
 
-
 import Dict exposing (Dict)
-import Json.Decode as JD exposing ((:=))
+import Json.Decode as JD exposing (field)
 
 
 -- TYPES
@@ -48,14 +47,15 @@ type alias PresenceDiff a =
     }
 
 
+
 -- Json Decoders
 
 
 presenceDiffDecoder : JD.Decoder a -> JD.Decoder (PresenceDiff a)
 presenceDiffDecoder payloadDecoder =
-    JD.object2 PresenceDiff
-        ("leaves" := presenceStateDecoder payloadDecoder)
-        ("joins" := presenceStateDecoder payloadDecoder)
+    JD.map2 PresenceDiff
+        (field "leaves" (presenceStateDecoder payloadDecoder))
+        (field "joins" (presenceStateDecoder payloadDecoder))
 
 
 presenceStateDecoder : JD.Decoder a -> JD.Decoder (PresenceState a)
@@ -65,8 +65,8 @@ presenceStateDecoder payloadDecoder =
 
 presenceStateMetaWrapperDecoder : JD.Decoder a -> JD.Decoder (PresenceStateMetaWrapper a)
 presenceStateMetaWrapperDecoder payloadDecoder =
-    JD.object1 PresenceStateMetaWrapper
-        ("metas" := JD.list (presenceStateMetaDecoder payloadDecoder))
+    JD.map PresenceStateMetaWrapper
+        (field "metas" (JD.list (presenceStateMetaDecoder payloadDecoder)))
 
 
 presenceStateMetaDecoder : JD.Decoder a -> JD.Decoder (PresenceStateMetaValue a)
@@ -76,9 +76,10 @@ presenceStateMetaDecoder payloadDecoder =
             JD.succeed (PresenceStateMetaValue phxRef payload)
 
         decodeWithPhxRef phxRef =
-            payloadDecoder `JD.andThen` (createFinalRecord phxRef)
+            payloadDecoder |> JD.andThen (createFinalRecord phxRef)
     in
-        ("phx_ref" := JD.string) `JD.andThen` decodeWithPhxRef
+        (field "phx_ref" JD.string) |> JD.andThen decodeWithPhxRef
+
 
 
 -- API
@@ -123,7 +124,7 @@ syncDiff diff state =
         mergeJoins : PresenceState a -> PresenceState a -> PresenceState a
         mergeJoins left right =
             let
-                inBoth : comparable -> PresenceStateMetaWrapper a -> PresenceStateMetaWrapper a -> PresenceState a -> PresenceState a
+                inBoth : String -> PresenceStateMetaWrapper a -> PresenceStateMetaWrapper a -> PresenceState a -> PresenceState a
                 inBoth key leftValue rightValue acc =
                     acc |> Dict.insert key (PresenceStateMetaWrapper (leftValue.metas ++ rightValue.metas))
             in
