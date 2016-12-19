@@ -54,6 +54,10 @@ See these blog posts for more on how it's built.
 
 Run the test suite with `mix test`.
 
+## Todo
+
+- Add a welcome modal so that a tap can unlock the audio context on mobile.
+
 ## Attribution
 
 The loops used by the app are [Apple Loops].
