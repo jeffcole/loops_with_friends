@@ -128,7 +128,7 @@ syncDiff diff state =
                 inBoth key leftValue rightValue acc =
                     acc |> Dict.insert key (PresenceStateMetaWrapper (leftValue.metas ++ rightValue.metas))
             in
-                merge Dict.insert
+                Dict.merge Dict.insert
                     inBoth
                     Dict.insert
                     left
@@ -139,32 +139,3 @@ syncDiff diff state =
             |> mergeJoins diff.joins
             |> Dict.map (mergeLeaves diff.leaves)
             |> Dict.filter (\_ metaWrapper -> metaWrapper.metas /= [])
-
-
-merge :
-    (comparable -> a -> result -> result)
-    -> (comparable -> a -> b -> result -> result)
-    -> (comparable -> b -> result -> result)
-    -> Dict comparable a
-    -> Dict comparable b
-    -> result
-    -> result
-merge leftStep bothStep rightStep leftDict rightDict initialResult =
-    let
-        stepState rKey rValue ( list, result ) =
-            case list of
-                [] ->
-                    ( list, rightStep rKey rValue result )
-
-                ( lKey, lValue ) :: rest ->
-                    if lKey < rKey then
-                        stepState rKey rValue ( rest, leftStep lKey lValue result )
-                    else if lKey > rKey then
-                        ( list, rightStep rKey rValue result )
-                    else
-                        ( rest, bothStep lKey lValue rValue result )
-
-        ( leftovers, intermediateResult ) =
-            Dict.foldl stepState ( Dict.toList leftDict, initialResult ) rightDict
-    in
-        List.foldl (\( k, v ) result -> leftStep k v result) intermediateResult leftovers
