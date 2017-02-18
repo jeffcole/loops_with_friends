@@ -6,10 +6,14 @@ It supports up to seven users in a given "jam," in which each user gets their ow
 
 See these blog posts for more on how it's built.
 
-- [The Back End - Part I]
-- [The Back End - Part II]
-- [Healthy Elixir Tests]
-- More to come
+1. [Collaborative Music Loops in Elixir and Elm]
+1. [Jamming with Phoenix Presence]
+1. [Talk to My (Elixir) Agent]
+1. [Phoenix Channel Race Conditions]
+1. [Testing Phoenix Sockets and Channels]
+1. [Injecting Agent Names in Elixir Tests]
+1. [Using Stubs to Isolate Elixir Tests]
+1. [Testing Function Delegation in Elixir]
 
 ## Development
 
@@ -71,8 +75,13 @@ Copyright © 2016 Jeff Cole. See [LICENSE](LICENSE) for more information.
 [Phoenix]: http://www.phoenixframework.org/
 [Elm]: http://elm-lang.org/
 [WebAudio API]: https://webaudio.github.io/web-audio-api/
-[The Back End - Part I]: http://jeff-cole.com/collaborative-music-loops-in-elixir-and-elm-the-back-end-part-1/
-[The Back End - Part II]:  http://jeff-cole.com/collaborative-music-loops-in-elixir-and-elm-the-back-end-part-2/
-[Healthy Elixir Tests]: http://jeff-cole.com/collaborative-music-loops-in-elixir-and-elm-healthy-elixir-tests/
+[Collaborative Music Loops in Elixir and Elm]: http://jeff-cole.com/collaborative-music-loops-in-elixir-and-elm
+[Jamming with Phoenix Presence]: http://jeff-cole.com/jamming-with-phoenix-presence
+[Talk to My (Elixir) Agent]: http://jeff-cole.com/talk-to-my-elixir-agent
+[Phoenix Channel Race Conditions]: http://jeff-cole.com/phoenix-channel-race-conditions
+[Testing Phoenix Sockets and Channels]: http://jeff-cole.com/testing-phoenix-sockets-and-channels
+[Injecting Agent Names in Elixir Tests]: http://jeff-cole.com/injecting-agent-names-in-elixir-tests
+[Using Stubs to Isolate Elixir Tests]: http://jeff-cole.com/using-stubs-to-isolate-elixir-tests
+[Testing Function Delegation in Elixir]: http://jeff-cole.com/testing-function-delegation-in-elixir
 [Install]: http://www.phoenixframework.org/docs/installation
 [Apple Loops]: https://support.apple.com/en-us/HT201808
