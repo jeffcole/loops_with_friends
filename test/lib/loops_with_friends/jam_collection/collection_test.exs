@@ -104,7 +104,7 @@ defmodule LoopsWithFriends.JamCollection.CollectionTest do
 
     test "given a populated collection returns non-zero counts" do
       result = Collection.stats(
-        %{"jam-1" => list_of_six_users, "jam-2" => list_of_seven_users}
+        %{"jam-1" => list_of_six_users(), "jam-2" => list_of_seven_users()}
       )
 
       assert result ==
