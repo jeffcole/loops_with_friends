@@ -79,7 +79,7 @@ defmodule LoopsWithFriends.JamBalancer.ServerTest do
   end
 
   defp start_server(context) do
-    Server.start_link(name: @name)
+    Server.start_link(name: @name, caller: self())
 
     context
   end
