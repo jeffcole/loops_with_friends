@@ -28,26 +28,14 @@ defmodule LoopsWithFriends.JamChannelTest do
     end
   end
 
-  describe "`join` given a full jam" do
+  describe "`join` when the jam is full" do
     test "returns an error and a new jam", %{socket: socket} do
-      join_response = subscribe_and_join(socket, "jams:full-jam", %{})
+      attempted_topic = "jams:full-jam"
+      join_response = subscribe_and_join(socket, attempted_topic, %{})
 
       assert {:error, reply} = join_response
-      assert %{new_topic: topic} = reply
-      assert topic != "jams:full-jam"
-    end
-  end
-
-  # To test this, we would need to populate the presence, which I don't know
-  # how to do from tests.
-  @tag :skip
-  describe "`join` when all loops are present" do
-    test "returns an error and a new jam", %{socket: socket} do
-      join_response = subscribe_and_join(socket, "jams:jam-1", %{})
-
-      assert {:error, reply} = join_response
-      assert %{new_topic: topic} = reply
-      assert topic != "jams:jam-1"
+      assert %{new_topic: new_topic} = reply
+      assert new_topic != attempted_topic
     end
   end
 

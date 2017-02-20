@@ -12,10 +12,22 @@ defmodule LoopsWithFriends.JamCollection.Stub do
     %{}
   end
 
-  def refresh(_jams, _jam_id, ["user-1"], opts \\ []) do
+  def add_user(_jams, _jam_id, _user_id, opts \\ [])
+
+  def add_user(_jams, "jam-1", _user_id, opts) do
     opts = Keyword.put_new(opts, :caller, self())
 
-    send opts[:caller], :called_jam_collection_refresh
+    send opts[:caller], :called_jam_collection_add_user
+
+    {:ok, %{}}
+  end
+
+  def add_user(_jams, "full-jam", _user_id, opts) do
+    opts = Keyword.put_new(opts, :caller, self())
+
+    send opts[:caller], :called_jam_collection_add_user
+
+    {:error}
   end
 
   def most_populated_jam_with_capacity_or_new(_jams) do

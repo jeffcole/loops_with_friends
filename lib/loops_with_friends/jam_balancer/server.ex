@@ -15,18 +15,19 @@ defmodule LoopsWithFriends.JamBalancer.Server do
     Agent.start_link(fn -> @jam_collection.new(opts) end, opts)
   end
 
-  def refresh(agent \\ @name, jam_id, presence_map, opts \\ []) do
-    Agent.update agent, fn jams ->
-      @jam_collection.refresh(jams, jam_id, Map.keys(presence_map), opts)
+  def add_user(agent \\ @name, jam_id, user_id, opts \\ []) do
+    Agent.get_and_update agent, fn jams ->
+      case @jam_collection.add_user(jams, jam_id, user_id, opts) do
+        {:ok, new_jams} ->
+          {:ok, new_jams}
+        {:error} ->
+          {:error, jams}
+      end
     end
   end
 
   def current_jam(agent \\ @name) do
     @jam_collection.most_populated_jam_with_capacity_or_new(jams(agent))
-  end
-
-  def jam_capacity?(agent \\ @name, jam_id) do
-    @jam_collection.jam_capacity?(jams(agent), jam_id)
   end
 
   def remove_user(agent \\ @name, jam_id, user_id, opts \\ []) do

@@ -12,21 +12,19 @@ defmodule LoopsWithFriends.JamChannel do
   intercept ["loop:played", "loop:stopped"]
 
   def join("jams:" <> jam_id, _params, socket) do
-    case next_loop(jam_id, socket) do
-      {:ok, loop} ->
-        Presence.track(socket, socket.assigns.user_id, %{
-          user_id: socket.assigns.user_id,
-          loop_name: loop
-        })
+    user_id = socket.assigns.user_id
 
-        @jam_balancer.refresh(jam_id, Presence.list(socket))
+    case @jam_balancer.add_user(jam_id, user_id) do
+      :ok ->
+        loop_name = LoopCycler.next_loop(present_loops(socket))
+        Presence.track(
+          socket, user_id, %{user_id: user_id, loop_name: loop_name}
+        )
 
         send self(), :after_join
 
-        {:ok,
-         %{user_id: socket.assigns.user_id},
-         assign(socket, :jam_id, jam_id)}
-      {:error} ->
+        {:ok, %{user_id: user_id}, assign(socket, :jam_id, jam_id)}
+      :error ->
         {:error, %{new_topic: "jams:#{@jam_balancer.current_jam}"}}
     end
   end
@@ -57,16 +55,6 @@ defmodule LoopsWithFriends.JamChannel do
     @jam_balancer.remove_user(socket.assigns.jam_id, socket.assigns.user_id)
 
     msg
-  end
-
-  defp next_loop(jam_id, socket) do
-    loop = LoopCycler.next_loop(present_loops(socket))
-
-    if @jam_balancer.jam_capacity?(jam_id) && loop do
-      {:ok, loop}
-    else
-      {:error}
-    end
   end
 
   defp update_presence(socket, user_id, event) do

@@ -14,21 +14,21 @@ defmodule LoopsWithFriends.JamCollection.Collection do
 
   def new(_opts \\ []), do: %{}
 
-  def refresh(jams, jam_id, users, _opts \\ []) do
-    put_in jams[jam_id], users
+  def add_user(jams, jam_id, new_user, _opts \\ []) do
+    jam_users = jams[jam_id] || []
+
+    collection = put_in(jams[jam_id], Enum.concat(jam_users, [new_user]))
+
+    if length(collection[jam_id]) <= @max_users do
+      {:ok, collection}
+    else
+      {:error}
+    end
   end
 
   def most_populated_jam_with_capacity_or_new(jams) when jams == %{}, do: uuid()
   def most_populated_jam_with_capacity_or_new(jams) do
     jam_with_most_users_under_max(jams) || uuid()
-  end
-
-  def jam_capacity?(jams, jam_id) do
-    if users = jams[jam_id] do
-      Enum.count(users) < @max_users
-    else
-      true
-    end
   end
 
   def remove_user(jams, jam_id, user_id, _opts \\ []) do
@@ -58,7 +58,7 @@ defmodule LoopsWithFriends.JamCollection.Collection do
   end
 
   defp less_than_max_users({_jam_id, users}) do
-    Enum.count(users) < @max_users
+    length(users) < @max_users
   end
 
   defp users({_jam_id, users}) do
@@ -66,7 +66,7 @@ defmodule LoopsWithFriends.JamCollection.Collection do
   end
 
   defp more_first(users_1, users_2) do
-    Enum.count(users_1) >= Enum.count(users_2)
+    length(users_1) >= length(users_2)
   end
 
   defp update(jams, jam_id, []) do

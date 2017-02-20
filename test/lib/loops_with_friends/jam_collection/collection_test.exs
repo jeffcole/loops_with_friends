@@ -9,26 +9,29 @@ defmodule LoopsWithFriends.JamCollection.CollectionTest do
     end
   end
 
-  describe "`refresh/3`" do
-    test "places the given users in the jam with the given id" do
-      collection = Collection.refresh(
-        Collection.new(),
-        "jam-1",
-        ["user-1"]
+  describe "`add_user/3`" do
+    test "places the user in the jam with the given id" do
+      assert {:ok, collection} = Collection.add_user(
+        Collection.new(), "jam-1", "user-1"
       )
 
       assert collection == %{"jam-1" => ["user-1"]}
     end
 
-    test "replaces the contents of the given jam" do
+    test "preserves existing users" do
       collection = %{"jam-1" => ["user-1"]}
-      refreshed_collection = Collection.refresh(
-        collection,
-        "jam-1",
-        ["user-2"]
+
+      assert {:ok, updated_collection} = Collection.add_user(
+        collection, "jam-1", "user-2"
       )
 
-      assert refreshed_collection == %{"jam-1" => ["user-2"]}
+      assert updated_collection == %{"jam-1" => ["user-1", "user-2"]}
+    end
+
+    test "returns an error when the user would overflow the jam" do
+      collection = %{"jam-1" => list_of_seven_users()}
+
+      assert {:error} = Collection.add_user(collection, "jam-1", "user-8")
     end
   end
 
@@ -55,26 +58,6 @@ defmodule LoopsWithFriends.JamCollection.CollectionTest do
       result = Collection.most_populated_jam_with_capacity_or_new(jams)
 
       assert result == "jam-2"
-    end
-  end
-
-  describe "`jam_capacity?/2`" do
-    test "given a jam that hasn't been populated yet is truthy" do
-      jams = %{}
-
-      assert Collection.jam_capacity?(jams, "jam-1")
-    end
-
-    test "given a not full jam is truthy " do
-      jams = %{"jam-1" => list_of_six_users()}
-
-      assert Collection.jam_capacity?(jams, "jam-1")
-    end
-
-    test "given a full jam is falsy " do
-      jams = %{"jam-1" => list_of_seven_users()}
-
-      refute Collection.jam_capacity?(jams, "jam-1")
     end
   end
 

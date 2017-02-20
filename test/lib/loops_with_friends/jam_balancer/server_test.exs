@@ -14,19 +14,21 @@ defmodule LoopsWithFriends.JamBalancer.ServerTest do
     end
   end
 
-  describe "`refresh`" do
+  describe "`add_user`" do
     setup :start_server
 
-    test "refreshes a jam with the keys of a map" do
-      result = Server.refresh(
-        @name,
-        "jam-1",
-        %{"user-1" => :data},
-        caller: self()
-      )
+    test "delegates to the collection" do
+      result = Server.add_user(@name, "jam-1", "user-1", caller: self())
 
       assert :ok = result
-      assert_receive :called_jam_collection_refresh
+      assert_receive :called_jam_collection_add_user
+    end
+
+    test "returns an error for a full jam" do
+      result = Server.add_user(@name, "full-jam", "user-1", caller: self())
+
+      assert :error = result
+      assert_receive :called_jam_collection_add_user
     end
   end
 
@@ -39,16 +41,6 @@ defmodule LoopsWithFriends.JamBalancer.ServerTest do
       assert_receive(
         :called_jam_collection_most_populated_jam_with_capacity_or_new
       )
-    end
-  end
-
-  describe "`jam_capacity?`" do
-    setup :start_server
-
-    test "delegates to the collection" do
-      Server.jam_capacity?(@name, "jam-1")
-
-      assert_receive :called_jam_collection_jam_capacity?
     end
   end
 

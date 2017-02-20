@@ -5,17 +5,23 @@ defmodule LoopsWithFriends.JamCollection do
 
   alias LoopsWithFriends.StatsCollection
 
-  @callback new :: Map
+  @callback new :: Map.t
 
-  @callback refresh(jams :: Map, jam_id :: String.t, [String.t]) ::
-              Agent.on_start
+  @callback add_user(
+    jams :: Map.t,
+    jam_id :: String.t,
+    new_user :: Map.t
+  ) ::
+    Agent.on_start
 
-  @callback most_populated_jam_with_capacity_or_new(jams :: Map) :: String.t
+  @callback most_populated_jam_with_capacity_or_new(jams :: Map.t) :: String.t
 
-  @callback jam_capacity?(jams :: Map, jam_id :: String.t) :: boolean
+  @callback remove_user(
+    jams :: Map.t,
+    jam_id :: String.t,
+    user_id :: String.t
+  ) ::
+    Map.t
 
-  @callback remove_user(jams :: Map, jam_id :: String.t, user_id :: String.t) ::
-              Map
-
-  @callback stats(jams :: Map) :: StatsCollection.t
+  @callback stats(jams :: Map.t) :: StatsCollection.t
 end
