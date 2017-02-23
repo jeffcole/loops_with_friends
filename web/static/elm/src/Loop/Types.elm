@@ -1,13 +1,11 @@
 module Loop.Types exposing (..)
 
+import Dict exposing (Dict)
 import WebAudio
 
 
-type alias Model =
-    { name : String
-    , sound : Sound
-    , state : State
-    }
+type Name
+    = String
 
 
 type Sound
@@ -19,6 +17,17 @@ type State
     = NotPlaying
     | Queued
     | Playing
+
+
+type alias Model =
+    { name : Name
+    , sound : Sound
+    , state : State
+    }
+
+
+type alias Collection =
+    Dict Name Model
 
 
 type Msg
@@ -40,7 +49,7 @@ type Event
     | NoEvent
 
 
-initialModel : String -> Model
+initialModel : Name -> Model
 initialModel name =
     { name = name
     , sound = NotLoaded
@@ -48,7 +57,7 @@ initialModel name =
     }
 
 
-initialModelFromEvent : String -> Event -> Model
+initialModelFromEvent : Name -> Event -> Model
 initialModelFromEvent name event =
     let
         model =

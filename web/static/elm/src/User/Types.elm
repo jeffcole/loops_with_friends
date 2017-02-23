@@ -11,7 +11,7 @@ type alias ID =
 
 type alias Model =
     { id : ID
-    , loop : Loop.Types.Model
+    , loopName : Loop.Types.Name
     }
 
 

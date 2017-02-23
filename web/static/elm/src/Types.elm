@@ -10,6 +10,7 @@ import User.Types
 
 type alias Model =
     { userId : User.Types.ID
+    , loops : Loop.Types.Collection
     , users : User.Types.Collection
     , socket : Phoenix.Socket.Socket Msg
     , presences : PresenceState Presence.Types.UserPresence
