@@ -60,6 +60,7 @@ Run the test suite with `mix test`.
 
 ## Todo
 
+- Eliminate the loop queueing gap by playing all loops on page load at zero volume, and setting the volume on user message receipt.
 - Add a welcome modal so that a tap can unlock the audio context on mobile.
 
 ## Attribution
@@ -68,7 +69,7 @@ The loops used by the app are [Apple Loops].
 
 ## License
 
-Copyright © 2016 Jeff Cole. See [LICENSE](LICENSE) for more information.
+Copyright © 2017 Jeff Cole. See [LICENSE](LICENSE) for more information.
 
 [Loops With Friends]: http://www.loopswithfriends.com/
 [Elixir]: http://elixir-lang.org/
