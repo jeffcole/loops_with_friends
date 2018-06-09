@@ -15,7 +15,14 @@ var _jeffcole$loops$Native_WebAudio = function() {
   	source.buffer = buffer;
 
   	source.connect(context.destination);
-  	source.noteOn(0);
+
+    if (source.start) {
+      source.start(0);
+    } else if (source.play) {
+      source.play(0);
+    } else if (source.noteOn) {
+      source.noteOn(0);
+    }
 
   }, false);
 
