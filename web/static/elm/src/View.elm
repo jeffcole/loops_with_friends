@@ -1,8 +1,10 @@
 module View exposing (root)
 
+import Dialog
 import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Helpers
 import Types exposing (..)
 import Player.View
@@ -13,7 +15,8 @@ import User.View
 root : Model -> Html Msg
 root model =
     div [ class "container" ]
-        [ div [ class "content" ]
+        [ bootstrap
+        , div [ class "content" ]
             [ header []
                 [ h1 [] [ text "Loops With Friends" ] ]
             , main_ []
@@ -21,6 +24,7 @@ root model =
                 , usersView (Helpers.otherUsers model)
                 ]
             ]
+        , dialog model
         ]
 
 
@@ -36,3 +40,35 @@ usersView users =
                 [ li [ class "grid-item placeholder" ] [] ]
                     ++ (Dict.values users |> List.map User.View.root)
             ]
+
+
+dialog : Model -> Html Msg
+dialog model =
+    Dialog.view
+        (if model.shouldShowDialog then
+            Just
+                { closeMessage = Just AcknowledgeDialog
+                , containerClass = Just "text-center "
+                , header = Just (text "Welcome to Loops With Friends!")
+                , body =
+                    Just
+                        (button
+                            [ onClick AcknowledgeDialog
+                            , style [ ( "color", "white" ) ]
+                            ]
+                            [ text "Let's Jam" ]
+                        )
+                , footer = Nothing
+                }
+         else
+            Nothing
+        )
+
+
+bootstrap : Html msg
+bootstrap =
+    node "link"
+        [ href "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        , rel "stylesheet"
+        ]
+        []

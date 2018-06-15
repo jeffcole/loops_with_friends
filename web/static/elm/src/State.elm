@@ -26,6 +26,7 @@ initialState flags =
           , users = User.Types.emptyCollection
           , socket = socket
           , presences = Dict.empty
+          , shouldShowDialog = True
           }
         , Cmd.map SocketMsg socketCmds
         )
@@ -166,6 +167,9 @@ update msg model =
                 ( { model | users = users, presences = presences }
                 , Cmd.batch (List.map Helpers.tagUserCmds cmds)
                 )
+
+        AcknowledgeDialog ->
+            ( { model | shouldShowDialog = False }, Cmd.none )
 
         NoOp ->
             ( model, Cmd.none )

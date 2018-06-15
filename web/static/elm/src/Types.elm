@@ -13,6 +13,7 @@ type alias Model =
     , users : User.Types.Collection
     , socket : Phoenix.Socket.Socket Msg
     , presences : PresenceState Presence.Types.UserPresence
+    , shouldShowDialog : Bool
     }
 
 
@@ -28,4 +29,5 @@ type Msg
     | SocketMsg (Phoenix.Socket.Msg Msg)
     | PresenceStateMsg JE.Value
     | PresenceDiffMsg JE.Value
+    | AcknowledgeDialog
     | NoOp
