@@ -20,37 +20,43 @@ See these blog posts for more on how it's built.
 1. [Install] Elixir, Phoenix, and dependencies.
 
 1. Clone and `cd` into the repository.
-  ```shell
-  git clone https://github.com/jeffcole/loops_with_friends.git
-  cd loops_with_friends
-  ```
+
+    ```shell
+    git clone https://github.com/jeffcole/loops_with_friends.git
+    cd loops_with_friends
+    ```
 
 1. Install Elixir dependencies.
-  ```shell
-  mix deps.get
-  ```
+
+    ```shell
+    mix deps.get
+    ```
 
 1. Create and migrate the database.
-  ```shell
-  mix ecto.create && mix ecto.migrate
-  ```
+
+    ```shell
+    mix ecto.create && mix ecto.migrate
+    ```
 
 1. Install asset dependencies.
-  ```shell
-  npm install
-  ```
+
+    ```shell
+    npm install
+    ```
 
 1. Install Elm packages.
-  ```shell
-  cd web/static/elm
-  ../../../node_modules/.bin/elm-package install
-  cd ../../..
-  ```
+
+    ```shell
+    cd web/static/elm
+    ../../../node_modules/.bin/elm-package install
+    cd ../../..
+    ```
 
 1. Run the server.
-  ```shell
-  mix phoenix.server
-  ```
+
+    ```shell
+    mix phoenix.server
+    ```
 
 1. Visit `http://localhost:4000` in the browser.
 
