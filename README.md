@@ -76,7 +76,7 @@ The loops used by the app are [Apple Loops].
 
 Copyright © 2017 Jeff Cole. See [LICENSE](LICENSE) for more information.
 
-[Loops With Friends]: http://www.loopswithfriends.com/
+[Loops With Friends]: http://loops-with-friends.herokuapp.com
 [Elixir]: http://elixir-lang.org/
 [Phoenix]: http://www.phoenixframework.org/
 [Elm]: http://elm-lang.org/
